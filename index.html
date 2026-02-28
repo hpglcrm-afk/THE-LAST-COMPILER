@@ -170,6 +170,19 @@
       margin: 30px auto;
     }
 
+    .title-credit {
+      margin-top: 40px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--text-dimmer);
+      letter-spacing: 0.1em;
+    }
+
+    .title-credit .highlight {
+      color: var(--aria);
+      font-weight: 600;
+    }
+
     .start-btn {
       background: transparent;
       border: 1px solid var(--aria);
@@ -582,9 +595,114 @@
       #aria-text { font-size: 1rem; }
       .choice-btn { padding: 14px 18px; font-size: 1rem; }
     }
+
+    /* Credits */
+    #credits {
+      text-align: center;
+      padding: 30px 0 20px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    #credits.visible {
+      opacity: 1;
+    }
+
+    .credit-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dimmer);
+      letter-spacing: 0.1em;
+    }
+
+    .credit-name {
+      color: var(--aria);
+      font-weight: 600;
+    }
+
+    /* Concept progress */
+    #concepts-tracker {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .concept-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--bg-lighter);
+      border: 1px solid var(--text-dimmer);
+      transition: all 0.3s;
+    }
+
+    .concept-dot.learned {
+      background: var(--success);
+      border-color: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .concept-dot:hover::after {
+      content: attr(data-concept);
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-light);
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    /* Sound toggle */
+    #sound-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 8px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #sound-toggle:hover {
+      border-color: var(--aria);
+      color: var(--aria);
+    }
+
+    #sound-toggle.muted {
+      opacity: 0.5;
+    }
+
+    /* Glitch effect for scene transitions */
+    @keyframes screenGlitch {
+      0% { transform: translate(0); filter: none; }
+      20% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
+      40% { transform: translate(2px, -1px); filter: hue-rotate(-90deg); }
+      60% { transform: translate(-1px, 2px); }
+      80% { transform: translate(1px, -2px); filter: hue-rotate(180deg); }
+      100% { transform: translate(0); filter: none; }
+    }
+
+    .scene-transition {
+      animation: screenGlitch 0.3s ease;
+    }
   </style>
 </head>
 <body>
+  <!-- Sound toggle -->
+  <button id="sound-toggle" onclick="toggleSound()">♫ ON</button>
+
   <!-- Floating particles -->
   <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
   <div class="particle" style="top: 20%; left: 80%; animation-delay: 2s;"></div>
@@ -608,6 +726,7 @@
       </div>
       <div class="title-divider"></div>
       <button class="start-btn" onclick="startGame()">Initialize System</button>
+      <p class="title-credit">developed by <span class="highlight">BhMn</span></p>
     </div>
 
     <!-- ═══════════════════════════════════════
@@ -638,6 +757,21 @@
         <h3>◇ MEMORY FRAGMENT RECOVERED</h3>
         <p id="memory-content"></p>
       </div>
+
+      <div id="concepts-tracker">
+        <div class="concept-dot" data-concept="Variables" title="Variables"></div>
+        <div class="concept-dot" data-concept="Loops" title="Loops"></div>
+        <div class="concept-dot" data-concept="Conditionals" title="Conditionals"></div>
+        <div class="concept-dot" data-concept="Functions" title="Functions"></div>
+        <div class="concept-dot" data-concept="Arrays" title="Arrays"></div>
+        <div class="concept-dot" data-concept="Objects" title="Objects"></div>
+        <div class="concept-dot" data-concept="Recursion" title="Recursion"></div>
+        <div class="concept-dot" data-concept="Algorithms" title="Algorithms"></div>
+      </div>
+
+      <div id="credits">
+        <span class="credit-text">developed by <span class="credit-name">BhMn</span></span>
+      </div>
     </div>
   </div>
 
@@ -650,7 +784,30 @@
       totalScenes: 20,
       visitedScenes: new Set(),
       playerName: '',
-      choices: []
+      choices: [],
+      soundEnabled: true,
+      learnedConcepts: new Set()
+    };
+
+    // Concept mapping for tracking
+    const conceptMap = {
+      'variable_intro': 'Variables',
+      'assignment_intro': 'Variables',
+      'loop_intro': 'Loops',
+      'infinite_intro': 'Loops',
+      'conditional_intro': 'Conditionals',
+      'conditional_knowledge': 'Conditionals',
+      'conditional_mystery': 'Conditionals',
+      'boolean_intro': 'Conditionals',
+      'function_intro': 'Functions',
+      'parameters_intro': 'Functions',
+      'scope_intro': 'Functions',
+      'array_intro': 'Arrays',
+      'iteration_intro': 'Arrays',
+      'object_intro': 'Objects',
+      'recursion_intro': 'Recursion',
+      'algorithm_intro': 'Algorithms',
+      'complexity_intro': 'Algorithms'
     };
 
     // ═══════════════════════════════════════
@@ -1051,8 +1208,25 @@
         return;
       }
 
+      // Track learned concepts
+      if (conceptMap[sceneId] && scene.puzzle) {
+        const concept = conceptMap[sceneId];
+        if (!gameState.learnedConcepts.has(concept)) {
+          gameState.learnedConcepts.add(concept);
+          updateConceptTracker();
+        }
+      }
+
       gameState.currentScene++;
       gameState.visitedScenes.add(sceneId);
+
+      // Add transition effect
+      const gameArea = document.getElementById('game-area');
+      if (gameArea) {
+        gameArea.classList.remove('scene-transition');
+        void gameArea.offsetWidth; // Trigger reflow
+        gameArea.classList.add('scene-transition');
+      }
 
       const chapterTitle = document.getElementById('chapter-title');
       const progressBar = document.getElementById('progress-bar');
@@ -1094,6 +1268,26 @@
             }, 300);
           }
         }, 500);
+      }
+    }
+
+    function updateConceptTracker() {
+      const dots = document.querySelectorAll('.concept-dot');
+      const conceptNames = ['Variables', 'Loops', 'Conditionals', 'Functions', 'Arrays', 'Objects', 'Recursion', 'Algorithms'];
+      
+      dots.forEach((dot, index) => {
+        if (gameState.learnedConcepts.has(conceptNames[index])) {
+          dot.classList.add('learned');
+        }
+      });
+    }
+
+    function toggleSound() {
+      gameState.soundEnabled = !gameState.soundEnabled;
+      const btn = document.getElementById('sound-toggle');
+      if (btn) {
+        btn.textContent = gameState.soundEnabled ? '♫ ON' : '♪ OFF';
+        btn.classList.toggle('muted', !gameState.soundEnabled);
       }
     }
 
@@ -1189,6 +1383,11 @@
       try {
         document.getElementById('title-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
+        
+        // Show credits
+        const credits = document.getElementById('credits');
+        if (credits) credits.classList.add('visible');
+        
         showScene('intro1');
         console.log('Game started successfully');
       } catch (e) {
