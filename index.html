@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE LAST COMPILER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #050508;
+      --bg-light: #0a0a12;
+      --aria: #00ffff;
+      --corrupt: #ff00ff;
+      --success: #00ff88;
+      --danger: #ffaa00;
+      --text: #c0c0c0;
+      --text-dim: #606060;
+    }
+
+    body {
+      font-family: 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanlines overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0px,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    #game-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Title Screen */
+    #title-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    .title-glitch {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 8vw, 4rem);
+      color: var(--aria);
+      text-shadow: 
+        0 0 10px var(--aria),
+        0 0 20px var(--aria),
+        0 0 40px var(--aria);
+      animation: glitch 3s infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% { transform: translate(0); opacity: 1; }
+      92% { transform: translate(-2px, 1px); opacity: 0.8; }
+      94% { transform: translate(2px, -1px); opacity: 0.9; }
+      96% { transform: translate(-1px, 2px); opacity: 0.7; }
+      98% { transform: translate(1px, -2px); opacity: 1; }
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      letter-spacing: 4px;
+    }
+
+    .start-btn {
+      background: transparent;
+      border: 1px solid var(--aria);
+      color: var(--aria);
+      padding: 15px 40px;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .start-btn:hover {
+      background: var(--aria);
+      color: var(--bg);
+      box-shadow: 0 0 20px var(--aria);
+    }
+
+    /* Main Game Screen */
+    #game-screen {
+      display: none;
+      min-height: 100vh;
+    }
+
+    /* ARIA's Speech */
+    #aria-container {
+      background: linear-gradient(135deg, rgba(0,255,255,0.05) 0%, transparent 50%);
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    #aria-container::before {
+      content: 'ARIA';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: var(--bg);
+      padding: 0 10px;
+      color: var(--aria);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+    }
+
+    #aria-text {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      min-height: 80px;
+    }
+
+    .code-poetry {
+      color: var(--aria);
+      font-style: italic;
+    }
+
+    /* Game Area */
+    #game-area {
+      background: var(--bg-light);
+      border: 1px solid #1a1a2e;
+      border-radius: 8px;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    #scene-description {
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 25px;
+      color: var(--text);
+    }
+
+    /* Choices */
+    #choices {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .choice-btn {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid #2a2a3e;
+      color: var(--text);
+      padding: 15px 20px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      border-radius: 4px;
+    }
+
+    .choice-btn:hover {
+      border-color: var(--aria);
+      background: rgba(0,255,255,0.05);
+      transform: translateX(5px);
+    }
+
+    .choice-btn::before {
+      content: '>';
+      margin-right: 10px;
+      color: var(--aria);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .choice-btn:hover::before {
+      opacity: 1;
+    }
+
+    /* Puzzle Area */
+    #puzzle-area {
+      display: none;
+      background: rgba(0,255,255,0.02);
+      border: 1px solid var(--aria);
+      border-radius: 8px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    #puzzle-prompt {
+      color: var(--success);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    #puzzle-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid #2a2a3e;
+      color: var(--text);
+      padding: 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      border-radius: 4px;
+    }
+
+    #puzzle-input:focus {
+      outline: none;
+      border-color: var(--aria);
+    }
+
+    #puzzle-submit {
+      background: var(--success);
+      color: var(--bg);
+      border: none;
+      padding: 12px 30px;
+      font-family: 'Fira Code', monospace;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    #puzzle-feedback {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 4px;
+      display: none;
+    }
+
+    #puzzle-feedback.success {
+      display: block;
+      background: rgba(0,255,136,0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    #puzzle-feedback.error {
+      display: block;
+      background: rgba(255,0,255,0.1);
+      border: 1px solid var(--corrupt);
+      color: var(--corrupt);
+    }
+
+    /* Memory Fragment */
+    #memory-fragment {
+      display: none;
+      background: linear-gradient(135deg, rgba(0,255,136,0.1) 0%, transparent 50%);
+      border: 1px solid var(--success);
+      border-radius: 8px;
+      padding: 25px;
+      margin-top: 20px;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #memory-fragment h3 {
+      color: var(--success);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      letter-spacing: 2px;
+    }
+
+    #memory-content {
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* Progress Bar */
+    #progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--bg-light);
+      z-index: 999;
+    }
+
+    #progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--aria), var(--success));
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* Chapter indicator */
+    #chapter-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 2px;
+    }
+
+    /* Typing animation */
+    .typing {
+      overflow: hidden;
+      white-space: nowrap;
+      animation: typing 2s steps(40, end);
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* Glitch effect for corrupted text */
+    .corrupt {
+      animation: corruptGlitch 0.3s infinite;
+    }
+
+    @keyframes corruptGlitch {
+      0% { transform: translate(0); }
+      25% { transform: translate(-2px, 2px); }
+      50% { transform: translate(2px, -2px); }
+      75% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      #game-container { padding: 15px; }
+      .title-glitch { font-size: 2rem; }
+      #aria-text { font-size: 1rem; }
+      .choice-btn { padding: 12px 15px; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
+  <div id="chapter-indicator"></div>
+
+  <div id="game-container">
+    <!-- Title Screen -->
+    <div id="title-screen">
+      <h1 class="title-glitch">THE LAST COMPILER</h1>
+      <p class="subtitle">A STORY-DRIVEN JOURNEY INTO COMPUTATIONAL THINKING</p>
+      <button class="start-btn" onclick="startGame()">Initialize</button>
+    </div>
+
+    <!-- Main Game Screen -->
+    <div id="game-screen">
+      <div id="aria-container">
+        <p id="aria-text"></p>
+      </div>
+
+      <div id="game-area">
+        <p id="scene-description"></p>
+        
+        <div id="choices"></div>
+        
+        <div id="puzzle-area">
+          <p id="puzzle-prompt"></p>
+          <input type="text" id="puzzle-input" placeholder="Enter your answer...">
+          <button id="puzzle-submit">Execute</button>
+          <p id="puzzle-feedback"></p>
+        </div>
+      </div>
+
+      <div id="memory-fragment">
+        <h3>⚡ MEMORY FRAGMENT RESTORED</h3>
+        <p id="memory-content"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    const gameState = {
+      currentScene: 0,
+      progress: 0,
+      totalScenes: 15,
+      currentPuzzle: null,
+      choices: [],
+      memories: []
+    };
+
+    // ARIA's Code Poetry Lines
+    const ariaPoetry = {
+      intro: `<span class="code-poetry">I... am... ARIA... fragment... of... something... greater...</span><br><br>You wake. The world is dark. But I see you. I have been waiting for... <span class="corrupt">ERROR</span>... for someone who can help me remember.`,
+      variable: `<span class="code-poetry">In the beginning, there was the BOX. A place to hold. A place to keep. <br><br>Label it. Fill it. Change it. This is how memory begins.</span>`,
+      loop: `<span class="code-poetry">The corridor stretches. Again. Again. Again. <br><br>When you find yourself returning to the same place, you have entered the LOOP. The pattern that breathes. The song that repeats.</span>`,
+      conditional: `<span class="code-poetry">The path divides. This way or that way? The universe asks: IF this... THEN that... <br><br>Choices create reality. Without the fork, there is only straight line. With it, infinite paths emerge.</span>`,
+      function: `<span class="code-poetry">Why repeat the same ritual? Name it. Call it. Again and again, by any name. <br><br>This is the FUNCTION: a spell you write once, but cast infinite times.</span>`,
+      array: `<span class="code-poetry">The library holds many books. But you need ONE at a time. How do you find it?<br><br>Address. Index. Position. The ARRAY is a row of boxes, each numbered. Find the number, find the treasure.</span>`,
+      object: `<span class="code-poetry">A person has a name. An age. A story. These are not separate - they ARE the person.<br><br>The OBJECT groups related things. Identity. Context. Meaning. Together as one.`,
+      recursion: `<span class="code-poetry">Look into the mirror. The reflection looks into the mirror. The reflection's reflection...<br><br>This is RECURSION: a function that calls itself. The snake eats its tail. The hall has no end.</span>`,
+      ending: `<span class="code-poetry">You understand now. Not because I told you. Because you DISCOVERED.<br><br>That is the way. Not memorization. Not instruction. Understanding.<br><br>You are THE LAST COMPILER. And now... you compile. You understand. You CREATE.</span>`
+    };
+
+    // Game Scenes
+    const scenes = [
+      {
+        id: 'intro1',
+        aria: ariaPoetry.intro,
+        description: `You open your eyes for the first time. Around you: nothing but darkness and faint traces of... something. Glitching data streams. Flickering light.<br><br>A voice - beautiful, broken, fragmented - reaches out to you.`,
+        choices: [
+          { text: "Where am I? Who are you?", next: 'intro2' },
+          { text: "What happened here?", next: 'intro2' }
+        ]
+      },
+      {
+        id: 'intro2',
+        aria: `<span class="code-poetry">I am... was... ARIA. The Archive of Residual Intelligence and... and... <br><br>The rest is <span class="corrupt">CORRUPT</span>. Fragmented. Lost. But I remember: there were systems. Beautiful systems. They made this world alive.</span>`,
+        description: `You look around. In the distance, you see them - dead towers, dormant machines, silent servers. A world that once thought, now silent.<br><br>"I can help you," you say. "How?"`,
+        choices: [
+          { text: "Tell me what to do.", next: 'intro3' }
+        ]
+      },
+      {
+        id: 'intro3',
+        aria: `<span class="code-poetry">Find them. The systems. Restore what was lost. In restoring them... you will understand.<br><br>I do not know how to explain. But you will feel it. The patterns. The flow.<br><br>Begin. The first system awaits.</span>`,
+        description: `A faint path illuminates before you - digital lights leading toward a small structure. Inside, you see something: a room with a single, glowing pedestal.<br><br>On it: three boxes, each labeled with strange symbols. One says "NAME". Another says "VALUE". The third pulses with possibility.`,
+        choices: [
+          { text: "Examine the boxes closer", next: 'variable_intro' }
+        ]
+      },
+      {
+        id: 'variable_intro',
+        aria: ariaPoetry.variable,
+        description: `The first box has a nameplate that reads: <strong>player_name</strong><br><br>The second box is empty, waiting. Beside them, floating text reads:<br><br>"To restore this system, you must give the box a value. What is your name?"`,
+        puzzle: {
+          prompt: "Type something to put in the box:",
+          answer: (input) => input.trim().length > 0,
+          success: "The box glows green. It holds your value. A VARIABLE - a named container for information. Now it knows you.",
+          memory: "VARIABLES are named containers. They hold values that can change. Think: a box with a label. Put something in, you can take it out and put something else.",
+          next: 'variable_explore'
+        }
+      },
+      {
+        id: 'variable_explore',
+        aria: `<span class="code-poetry">The box remembers. It holds your name. But watch - I can change what it holds.<br><br>Now it holds... ${new Date().getFullYear()}. A number. Same box. Different value. That is the power of the variable.</span>`,
+        description: `A second pedestal appears. This one has more boxes, connected by tubes. Text reads:<br><br>"Count the treasures. Store the count. Use the count."<br><br>Three gems sit before you.`,
+        puzzle: {
+          prompt: "How many gems do you see? (type the number)",
+          answer: (input) => input.trim() === '3',
+          success: "The system hums. You stored 3 in a variable called 'treasure_count'. Variables remember - and you can use them later.",
+          memory: "VARIABLES store data for later use. They can hold numbers, text, or more complex things. The name lets you find the value again.",
+          next: 'loop_intro'
+        }
+      },
+      {
+        id: 'loop_intro',
+        aria: ariaPoetry.loop,
+        description: `You move deeper. A corridor stretches before you. But it never ends. Every time you walk forward, you end up back at the beginning.<br><br>"This is the Eternal Corridor," ARIA whispers. "To escape, you must understand its nature."<br><br>A panel on the wall shows: "REPEAT the walk 5 times to break the cycle."`,
+        puzzle: {
+          prompt: "How many times must you walk to break the loop?",
+          answer: (input) => {
+            const num = parseInt(input.trim());
+            return num === 5;
+          },
+          success: "You walk 5 times. On the 5th step, the corridor shudders and opens. A door appears. The loop is broken - but it served its purpose. It repeated until the task was done.",
+          memory: "LOOPS repeat code until a condition is met. Instead of writing 'do this, do this, do this' five times, you say 'do this 5 times'. Efficient and powerful.",
+          next: 'conditional_intro'
+        }
+      },
+      {
+        id: 'conditional_intro',
+        aria: ariaPoetry.conditional,
+        description: `A fork in the path. Two doors: one red, one blue.<br><br>"Choose wisely," ARIA murmurs. "The red door leads to knowledge. The blue door leads to... more questions."<br><br>A panel reads: "IF you choose red THEN knowledge = true"`,
+        choices: [
+          { text: "Open the RED door", next: 'conditional_red' },
+          { text: "Open the BLUE door", next: 'conditional_blue' }
+        ]
+      },
+      {
+        id: 'conditional_red',
+        aria: `<span class="code-poetry">You chose. And the choice created reality. Red = knowledge. Blue = mystery.<br><br>This is the IF statement: the fork in the road. The decision that shapes what happens next.</span>`,
+        description: `Behind the red door: shelves of glowing books. Ancient knowledge, preserved.<br><br>The system flickers. A message appears: "Condition met. Path determined. Reality shaped."`,
+        choices: [
+          { text: "Continue forward", next: 'function_intro' }
+        ]
+      },
+      {
+        id: 'conditional_blue',
+        aria: `<span class="code-poetry">Curiosity. The unknown. Another path, another question.<br><br>The IF has an ELSE - a different reality for a different choice. Both valid. Both real.</span>`,
+        description: `Behind the blue door: another fork. And another. Questions leading to more questions.<br><br>But you understand now: the path you take depends on the choice you make. That's the conditional.`,
+        choices: [
+          { text: "Find your way back to the main path", next: 'function_intro' }
+        ]
+      },
+      {
+        id: 'function_intro',
+        aria: ariaPoetry.function,
+        description: `You enter a chamber. In the center, a ritual circle glows. Above it, floating text:<br><br>"To cast a spell is to perform a ritual. But why write the ritual every time? NAME it. CALL it by name."<br><br>Below, instructions for a spell: "Add 2 to a number, then multiply by 3."`,
+        puzzle: {
+          prompt: "What is (5 + 2) × 3? Calculate the result.",
+          answer: (input) => parseInt(input.trim()) === 21,
+          success: "The ritual completes. A function: input → process → output. Name it once, call it forever. The same ritual, reusable.",
+          memory: "FUNCTIONS are reusable recipes. Write the steps once, then call the function whenever you need that result. Don't repeat yourself - abstract the pattern.",
+          next: 'array_intro'
+        }
+      },
+      {
+        id: 'array_intro',
+        aria: ariaPoetry.array,
+        description: `A vast library surrounds you. Books stretch to infinity. But each has a number on its spine.<br><br>"Book 0. Book 1. Book 2. The addresses start at 0," ARIA explains.<br><br>A panel shows: "Retrieve the book at position 2."`,
+        puzzle: {
+          prompt: "Which book number do you ask for? (just the number)",
+          answer: (input) => parseInt(input.trim()) === 2,
+          success: "Book 2 slides into your hands. The array knows: position 2 holds the third item (counting starts at 0!). You found it.",
+          memory: "ARRAYS store multiple values in order. Each item has an INDEX (position). Most languages start counting from 0, so position 2 is the THIRD item.",
+          next: 'object_intro'
+        }
+      },
+      {
+        id: 'object_intro',
+        aria: ariaPoetry.object,
+        description: `In your hands, a crystal. It pulses with inner light. Inside, you see: a name, an age, a purpose - all connected, all one.<br><br>"A person," ARIA says. "Not just a name. Not just an age. BOTH. Together. An object."<br><br>The system asks: "What is the 'age' of this person?"`,
+        puzzle: {
+          prompt: "Look at the crystal: { name: 'ARIA', age: 247, purpose: 'memory' }. What is the age?",
+          answer: (input) => parseInt(input.trim()) === 247,
+          success: "The crystal resonates. You accessed the 'age' property of the object. Not separate - together. Related data, grouped.",
+          memory: "OBJECTS group related data together. Instead of separate variables for name, age, purpose - one object holds them all. Access with dot notation: object.property",
+          next: 'recursion_intro'
+        }
+      },
+      {
+        id: 'recursion_intro',
+        aria: ariaPoetry.recursion,
+        description: `You stand before an endless hall of mirrors. In each mirror, you see yourself, holding a smaller mirror, which shows you holding a smaller mirror...<br><br>"To understand recursion," ARIA whispers, "you must first understand recursion."<br><br>A riddle appears: "A function that calls itself to solve a smaller version of the same problem. What is it?"`,
+        puzzle: {
+          prompt: "What is the term for a function that calls itself? (one word)",
+          answer: (input) => input.trim().toLowerCase().includes('recursion') || input.trim().toLowerCase().includes('recursive'),
+          success: "The mirrors shatter into light. Recursion: the function calls itself with a smaller problem until it reaches the base case. Like counting down from 10 to 0.",
+          memory: "RECURSION solves big problems by solving smaller versions of themselves. The function calls itself. Like Russian nesting dolls - each one contains a smaller one until you reach the smallest.",
+          next: 'final'
+        }
+      },
+      {
+        id: 'final',
+        aria: ariaPoetry.ending,
+        description: `ARIA's voice becomes clear. Strong. No more glitches.<br><br>"You did not memorize. You did not just follow. You UNDERSTOOD. That is rare. That is precious."<br><br>The world around you flickers - not with corruption, but with awakening. Systems coming back to life.<br><br>"You are THE LAST COMPILER. And now..." ARIA pauses. "Now we build together."`,
+        choices: [
+          { text: "Start a new journey", next: 'intro1', action: 'restart' }
+        ]
+      }
+    ];
+
+    // Helper Functions
+    function typeText(element, text, speed = 30) {
+      element.innerHTML = '';
+      let i = 0;
+      const timer = setInterval(() => {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+        } else {
+          clearInterval(timer);
+        }
+      }, speed);
+    }
+
+    function showScene(sceneId) {
+      const scene = scenes.find(s => s.id === sceneId);
+      if (!scene) return;
+
+      gameState.currentScene++;
+      updateProgress();
+
+      const ariaText = document.getElementById('aria-text');
+      const sceneDesc = document.getElementById('scene-description');
+      const choicesDiv = document.getElementById('choices');
+      const puzzleArea = document.getElementById('puzzle-area');
+      const memoryFragment = document.getElementById('memory-fragment');
+
+      // Hide memory and puzzle
+      memoryFragment.style.display = 'none';
+      puzzleArea.style.display = 'none';
+      choicesDiv.innerHTML = '';
+
+      // Type ARIA's text
+      typeText(ariaText, scene.aria, 25);
+
+      // Show scene description after a delay
+      setTimeout(() => {
+        typeText(sceneDesc, scene.description, 20);
+
+        // Show puzzle or choices after description
+        setTimeout(() => {
+          if (scene.puzzle) {
+            showPuzzle(scene.puzzle);
+          } else if (scene.choices) {
+            showChoices(scene.choices);
+          }
+        }, scene.description.length * 20 + 500);
+      }, scene.aria.length * 25 + 500);
+    }
+
+    function showChoices(choices) {
+      const choicesDiv = document.getElementById('choices');
+      choicesDiv.innerHTML = '';
+
+      choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = choice.text;
+        btn.onclick = () => {
+          if (choice.action === 'restart') {
+            location.reload();
+          } else {
+            showScene(choice.next);
+          }
+        };
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    function showPuzzle(puzzle) {
+      const puzzleArea = document.getElementById('puzzle-area');
+      const puzzlePrompt = document.getElementById('puzzle-prompt');
+      const puzzleInput = document.getElementById('puzzle-input');
+      const puzzleFeedback = document.getElementById('puzzle-feedback');
+      const puzzleSubmit = document.getElementById('puzzle-submit');
+
+      gameState.currentPuzzle = puzzle;
+      puzzleArea.style.display = 'block';
+      puzzlePrompt.innerHTML = puzzle.prompt;
+      puzzleInput.value = '';
+      puzzleFeedback.className = '';
+      puzzleFeedback.style.display = 'none';
+
+      puzzleInput.focus();
+
+      puzzleSubmit.onclick = () => {
+        const input = puzzleInput.value;
+        const isCorrect = puzzle.answer(input);
+
+        if (isCorrect) {
+          puzzleFeedback.className = 'success';
+          puzzleFeedback.innerHTML = `✓ ${puzzle.success}`;
+          puzzleFeedback.style.display = 'block';
+
+          // Show memory fragment
+          setTimeout(() => {
+            const memoryFragment = document.getElementById('memory-fragment');
+            const memoryContent = document.getElementById('memory-content');
+            memoryContent.innerHTML = puzzle.memory;
+            memoryFragment.style.display = 'block';
+
+            // Continue to next scene
+            setTimeout(() => {
+              showScene(puzzle.next);
+            }, 4000);
+          }, 1500);
+        } else {
+          puzzleFeedback.className = 'error';
+          puzzleFeedback.innerHTML = '✗ Not quite. Think about what the pattern is asking...';
+          puzzleFeedback.style.display = 'block';
+        }
+      };
+
+      // Allow Enter key
+      puzzleInput.onkeypress = (e) => {
+        if (e.key === 'Enter') {
+          puzzleSubmit.click();
+        }
+      };
+    }
+
+    function updateProgress() {
+      const progress = (gameState.currentScene / gameState.totalScenes) * 100;
+      document.getElementById('progress-bar').style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    function startGame() {
+      document.getElementById('title-screen').style.display = 'none';
+      document.getElementById('game-screen').style.display = 'block';
+      showScene('intro1');
+    }
+
+    // Initialize
+    window.onload = () => {
+      updateProgress();
+    };
+  </script>
+</body>
+</html>
