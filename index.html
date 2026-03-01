@@ -3845,6 +3845,9 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
 
       if (!puzzleArea || !puzzlePrompt || !puzzleInput || !puzzleFeedback || !puzzleSubmit) return;
 
+      // Store current scene ID for callback
+      const sceneId = currentSceneKey;
+
       // Remove old code layers
       const oldLayers = puzzleArea.querySelectorAll('.code-layer');
       oldLayers.forEach(layer => layer.remove());
