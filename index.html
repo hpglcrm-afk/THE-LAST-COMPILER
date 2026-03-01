@@ -713,12 +713,182 @@
     .scene-transition {
       animation: screenGlitch 0.3s ease;
     }
+
+    /* Corruption effects */
+    .corruption-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 9997;
+      opacity: 0;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 45, 106, 0.03) 2px,
+          rgba(255, 45, 106, 0.03) 4px
+        );
+      transition: opacity 0.5s;
+    }
+
+    .corruption-overlay.low {
+      opacity: 0.3;
+    }
+
+    .corruption-overlay.medium {
+      opacity: 0.5;
+      animation: corruptionFlicker 0.1s infinite;
+    }
+
+    .corruption-overlay.high {
+      opacity: 0.7;
+      animation: corruptionFlicker 0.05s infinite;
+    }
+
+    .corruption-overlay.critical {
+      opacity: 0.9;
+      animation: corruptionFlicker 0.02s infinite;
+    }
+
+    @keyframes corruptionFlicker {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.9; }
+    }
+
+    /* Corruption bar */
+    #corruption-container {
+      position: fixed;
+      top: 50px;
+      left: 20px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    #corruption-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem;
+      color: var(--corrupt);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    #corruption-bar {
+      width: 100px;
+      height: 4px;
+      background: var(--bg-lighter);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #corruption-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--success), var(--danger), var(--corrupt));
+      transition: width 0.5s ease;
+    }
+
+    /* Abstraction toggle */
+    #abstraction-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 8px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #abstraction-toggle:hover {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    #abstraction-toggle.code-mode {
+      border-color: var(--success);
+      color: var(--success);
+      background: rgba(0, 255, 157, 0.1);
+    }
+
+    /* Code layer */
+    .code-layer {
+      display: none;
+      background: #0a0a0f;
+      border: 1px solid var(--success);
+      border-radius: 4px;
+      padding: 20px;
+      margin: 15px 0;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--success);
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+
+    .code-layer.visible {
+      display: block;
+      animation: codeFadeIn 0.3s ease;
+    }
+
+    @keyframes codeFadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .code-layer .keyword { color: var(--corrupt); }
+    .code-layer .function { color: var(--aria); }
+    .code-layer .string { color: var(--danger); }
+    .code-layer .comment { color: var(--text-dimmer); font-style: italic; }
+    .code-layer .number { color: var(--success); }
+
+    /* Fusion puzzle indicator */
+    .fusion-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--corrupt), var(--aria));
+      color: var(--bg-deep);
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      animation: fusionPulse 2s infinite;
+    }
+
+    @keyframes fusionPulse {
+      0%, 100% { box-shadow: 0 0 5px var(--corrupt); }
+      50% { box-shadow: 0 0 15px var(--aria); }
+    }
   </style>
 </head>
 <body>
+  <!-- Corruption overlay -->
+  <div class="corruption-overlay" id="corruption-overlay"></div>
+
   <!-- Sound toggle -->
   <button id="sound-toggle" onclick="toggleSound()">♫ ON</button>
   <button id="voice-toggle" onclick="toggleVoice()">🎤 ON</button>
+  
+  <!-- Abstraction toggle -->
+  <button id="abstraction-toggle" onclick="toggleAbstraction()">◈ STORY</button>
+
+  <!-- Corruption bar -->
+  <div id="corruption-container">
+    <span id="corruption-label">ARIA Health</span>
+    <div id="corruption-bar">
+      <div id="corruption-fill"></div>
+    </div>
+  </div>
 
   <!-- Floating particles -->
   <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
@@ -803,7 +973,11 @@
       playerName: '',
       choices: [],
       soundEnabled: true,
-      learnedConcepts: new Set()
+      learnedConcepts: new Set(),
+      corruption: 0,        // 0-100, increases with wrong answers
+      maxCorruption: 100,
+      abstractionMode: 'story', // 'story' or 'code'
+      currentFusion: null
     };
 
     // Concept mapping for tracking
@@ -1210,6 +1384,157 @@
       stopSpeech();
     }
 
+    // ═══════════════════════════════════════
+    // CORRUPTION SYSTEM
+    // ═══════════════════════════════════════
+    function updateCorruption() {
+      const corruption = gameState.corruption;
+      const fill = document.getElementById('corruption-fill');
+      const overlay = document.getElementById('corruption-overlay');
+      
+      if (fill) {
+        fill.style.width = corruption + '%';
+      }
+      
+      if (overlay) {
+        overlay.className = 'corruption-overlay';
+        if (corruption >= 80) {
+          overlay.classList.add('critical');
+        } else if (corruption >= 50) {
+          overlay.classList.add('high');
+        } else if (corruption >= 25) {
+          overlay.classList.add('medium');
+        } else if (corruption > 0) {
+          overlay.classList.add('low');
+        }
+      }
+    }
+
+    function addCorruption(amount) {
+      gameState.corruption = Math.min(gameState.corruption + amount, gameState.maxCorruption);
+      updateCorruption();
+      
+      // Play corruption sound effect
+      playGlitchSound();
+      
+      // If corruption gets too high, warn player
+      if (gameState.corruption >= 75 && gameState.corruption - amount < 75) {
+        speakAria('Warning. Corruption spreading. Answer correctly to heal me.');
+      }
+    }
+
+    function healCorruption(amount) {
+      if (gameState.corruption > 0) {
+        gameState.corruption = Math.max(gameState.corruption - amount, 0);
+        updateCorruption();
+      }
+    }
+
+    // ═══════════════════════════════════════
+    // ABSTRACTION LAYER
+    // ═══════════════════════════════════════
+    function toggleAbstraction() {
+      gameState.abstractionMode = gameState.abstractionMode === 'story' ? 'code' : 'story';
+      
+      const btn = document.getElementById('abstraction-toggle');
+      if (btn) {
+        btn.textContent = gameState.abstractionMode === 'story' ? '◈ STORY' : '◈ CODE';
+        btn.classList.toggle('code-mode', gameState.abstractionMode === 'code');
+      }
+      
+      // Update visible code layers
+      document.querySelectorAll('.code-layer').forEach(el => {
+        el.classList.toggle('visible', gameState.abstractionMode === 'code');
+      });
+      
+      // Also toggle fusion code layer
+      const fusionLayer = document.getElementById('fusion-code-layer');
+      if (fusionLayer) {
+        fusionLayer.classList.toggle('visible', gameState.abstractionMode === 'code');
+      }
+      
+      playClickSound();
+    }
+
+    function getCodeExample(concept) {
+      const codeExamples = {
+        'variable': `<span class="comment">// The box that remembers</span>
+<span class="keyword">let</span> playerName = <span class="string">"YourName"</span>;
+<span class="keyword">let</span> score = <span class="number">0</span>;
+playerName = <span class="string">"NewName"</span>; <span class="comment">// Changed!</span>`,
+        
+        'loop': `<span class="comment">// Repeat until condition met</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+  <span class="function">console</span>.<span class="function">log</span>(i);
+}`,
+        
+        'conditional': `<span class="comment">// The fork in the road</span>
+<span class="keyword">if</span> (score > <span class="number">10</span>) {
+  <span class="function">console</span>.<span class="function">log</span>(<span class="string">"Win!"</span>);
+} <span class="keyword">else</span> {
+  <span class="function">console</span>.<span class="function">log</span>(<span class="string">"Try again"</span>);
+}`,
+        
+        'function': `<span class="comment">// A reusable spell</span>
+<span class="keyword">function</span> <span class="function">add</span>(a, b) {
+  <span class="keyword">return</span> a + b;
+}
+<span class="function">add</span>(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">// Returns 5</span>`,
+        
+        'array': `<span class="comment">// An ordered collection</span>
+<span class="keyword">let</span> items = [<span class="string">"a"</span>, <span class="string">"b"</span>, <span class="string">"c"</span>];
+items[<span class="number">0</span>]; <span class="comment">// "a" (starts at 0!)</span>
+items.<span class="function">length</span>; <span class="comment">// 3</span>`,
+        
+        'object': `<span class="comment">// Related data grouped</span>
+<span class="keyword">let</span> player = {
+  name: <span class="string">"Kai"</span>,
+  level: <span class="number">1</span>,
+  power: <span class="string">"understanding"</span>
+};
+player.name; <span class="comment">// "Kai"</span>`,
+        
+        'recursion': `<span class="comment">// Function calling itself</span>
+<span class="keyword">function</span> <span class="function">countdown</span>(n) {
+  <span class="keyword">if</span> (n <= <span class="number">0</span>) <span class="keyword">return</span> <span class="string">"done"</span>;
+  <span class="keyword">return</span> <span class="function">countdown</span>(n - <span class="number">1</span>);
+}`,
+        
+        'algorithm': `<span class="comment">// Bubble sort - simple sorting</span>
+<span class="keyword">for</span> (i = <span class="number">0</span>; i < arr.<span class="function">length</span>; i++) {
+  <span class="keyword">for</span> (j = <span class="number">0</span>; j < arr.<span class="function">length</span> - i - <span class="number">1</span>; j++) {
+    <span class="keyword">if</span> (arr[j] > arr[j+<span class="number">1</span>]) {
+      <span class="comment">// Swap</span>
+    }
+  }
+}`,
+        
+        'loop+function': `<span class="comment">// Function inside a loop</span>
+<span class="keyword">function</span> <span class="function">addOne</span>(x) {
+  <span class="keyword">return</span> x + <span class="number">1</span>;
+}
+
+<span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++) {
+  <span class="function">addOne</span>(i);
+}`,
+        
+        'array+object': `<span class="comment">// Array of objects</span>
+<span class="keyword">let</span> players = [
+  { name: <span class="string">"Kai"</span>, power: <span class="string">"code"</span> },
+  { name: <span class="string">"ARIA"</span>, power: <span class="string">"memory"</span> }
+];
+players[<span class="number">1</span>].name <span class="comment">// "ARIA"</span>`,
+        
+        'recursion+conditional': `<span class="comment">// Recursion with base case</span>
+<span class="keyword">function</span> <span class="function">countdown</span>(n) {
+  <span class="keyword">if</span> (n <= <span class="number">0</span>) <span class="keyword">return</span> <span class="string">"done"</span>; <span class="comment">// BASE CASE</span>
+  <span class="keyword">return</span> <span class="function">countdown</span>(n - <span class="number">1</span>);
+}`
+      };
+      
+      return codeExamples[concept] || '<span class="comment">// Code example loading...</span>';
+    }
+
     function updateConceptTracker() {
       const dots = document.querySelectorAll('.concept-dot');
       const conceptNames = ['Variables', 'Loops', 'Conditionals', 'Functions', 'Arrays', 'Objects', 'Recursion', 'Algorithms'];
@@ -1548,8 +1873,62 @@
           answer: (input) => input.trim().toLowerCase().includes('o(n)'),
           success: "O(n). Linear time. More items = more time, proportionally.<br><br>Some algorithms grow slowly (good). Some explode (bad). Know your complexity—or drown in data.",
           memory: `<span class="concept-name">COMPLEXITY</span> measures how algorithm time grows with input.<br><br><span class="code-poetry">O(1)</span> — constant (instant, regardless of size)<br><span class="code-poetry">O(n)</span> — linear (doubles input, doubles time)<br><span class="code-poetry">O(n²)</span> — quadratic (doubles input, quadruples time!)<br><br>Choose wisely.`,
-          next: 'final'
+          next: 'fusion_loop_function'
         }
+      },
+      // ═══════════════════════════════════
+      // FUSION PUZZLE 1: Loop + Function
+      // ═══════════════════════════════════
+      {
+        id: 'fusion_loop_function',
+        chapter: 'FUSION: PATTERNS COMBINE',
+        aria: `<span class="code-poetry">Now you understand both patterns separately. But what happens when they <span class="emphasis">combine</span>?<br><br>A function that repeats. A loop with a name. <span class="emphasis">This is power.</span></span>`,
+        description: `A chamber with two glyphs: a loop and a function, merged into one symbol.<br><br>"Create a function that adds 1 to a number, then call it 3 times."<br><br>The pattern: <code>addOne(1) → 2, addOne(2) → 3, addOne(3) → ?</code>`,
+        puzzle: {
+          prompt: "What does addOne(3) return?",
+          answer: (input) => parseInt(input.trim()) === 4,
+          success: "4! The function adds 1, so 3+1=4. The function did the work, the loop called it thrice.",
+          memory: `<span class="concept-name">FUSION: LOOP + FUNCTION</span><br><br>Functions can contain loops, loops can call functions.<br><br><span class="code-poetry">function processAll(items) {<br>&nbsp;&nbsp;for (let item of items) {<br>&nbsp;&nbsp;&nbsp;&nbsp;console.log(item);<br>&nbsp;&nbsp;}<br>}</span><br><br>This is foundation of data processing.`
+        },
+        fusion: ['loop', 'function'],
+        next: 'fusion_array_object'
+      },
+      // ═══════════════════════════════════
+      // FUSION PUZZLE 2: Array + Object
+      // ═══════════════════════════════════
+      {
+        id: 'fusion_array_object',
+        chapter: 'FUSION: DATA COMBINES',
+        aria: `<span class="code-poetry">Arrays hold lists. Objects hold properties. <br><br>But what if you need a <span class="emphasis">list of objects</span>? Many things, each with many properties?</span>`,
+        description: `A library of crystals. Each crystal is an object. But they're arranged in a row—<br><br>An array of objects!<br><br><code>players[0].name</code> — <code>players[1].power</code>`,
+        puzzle: {
+          prompt: "What is players[1].name?",
+          answer: (input) => input.trim().toLowerCase().includes('aria'),
+          success: "ARIA! You accessed the second object (index 1), then its name property. Array + Object = powerful data structure.",
+          memory: `<span class="concept-name">FUSION: ARRAY + OBJECT</span><br><br><span class="code-poetry">let players = [<br>&nbsp;&nbsp;{ name: "Kai", power: "code" },<br>&nbsp;&nbsp;{ name: "ARIA", power: "memory" }<br>];<br>players[1].name // "ARIA"</span><br><br>This is how databases work!`
+        },
+        fusion: ['array', 'object'],
+        next: 'fusion_recursion_conditional'
+      },
+      // ═══════════════════════════════════
+      // FUSION PUZZLE 3: Recursion + Conditional
+      // ═══════════════════════════════════
+      {
+        id: 'fusion_recursion_conditional',
+        chapter: 'FUSION: THE FINAL COMBINATION',
+        aria: `<span class="code-poetry">Recursion is powerful. But dangerous. Without a condition, it loops forever.<br><br>The <span class="emphasis">conditional</span> is the safety net. The base case. The place where recursion <span class="corrupt">stops</span>.</span>`,
+        description: `An infinite mirror, but with a gate. The gate only opens when the counter reaches 0.<br><br>"Each reflection calls itself with counter-1. But if counter=0, it stops."`,
+        puzzle: {
+          prompt: "In countdown(2), how many times does it call itself?",
+          answer: (input) => {
+            const q = input.trim().toLowerCase();
+            return q === '2' || q.includes('2');
+          },
+          success: "2 times! countdown(2) calls countdown(1), which calls countdown(0), which stops. That's the base case—the conditional that ends recursion.",
+          memory: `<span class="concept-name">FUSION: RECURSION + CONDITIONAL</span><br><br><span class="code-poetry">function countdown(n) {<br>&nbsp;&nbsp;if (n <= 0) return "done"; // BASE CASE<br>&nbsp;&nbsp;return countdown(n - 1); // RECURSION<br>}</span><br><br>Every recursion NEEDS a conditional base case!`
+        },
+        fusion: ['recursion', 'conditional'],
+        next: 'final'
       },
       // ═══════════════════════════════════
       // FINAL
@@ -1679,7 +2058,8 @@
             
             setTimeout(() => {
               if (scene.puzzle) {
-                showPuzzle(scene.puzzle);
+                const fusion = scene.fusion || null;
+                showPuzzle(scene.puzzle, fusion);
               } else if (scene.choices) {
                 showChoices(scene.choices);
               }
@@ -1756,7 +2136,7 @@
       });
     }
 
-    function showPuzzle(puzzle) {
+    function showPuzzle(puzzle, fusion = null) {
       const puzzleArea = document.getElementById('puzzle-area');
       const puzzlePrompt = document.getElementById('puzzle-prompt');
       const puzzleInput = document.getElementById('puzzle-input');
@@ -1765,12 +2145,34 @@
 
       if (!puzzleArea || !puzzlePrompt || !puzzleInput || !puzzleFeedback || !puzzleSubmit) return;
 
+      // Remove old fusion code layer
+      const oldLayer = document.getElementById('fusion-code-layer');
+      if (oldLayer) oldLayer.remove();
+
+      // Store fusion info
+      gameState.currentFusion = fusion;
+
       puzzleArea.style.display = 'block';
-      puzzlePrompt.innerHTML = puzzle.prompt;
+      puzzlePrompt.innerHTML = (fusion ? '<span class="fusion-badge">⚡ FUSION: ' + fusion.join(' + ').toUpperCase() + '</span><br>' : '') + puzzle.prompt;
       puzzleInput.value = '';
       puzzleFeedback.className = '';
       puzzleFeedback.style.display = 'none';
       puzzleInput.focus();
+
+      // Show code example in code layer
+      if (fusion && fusion.length > 0) {
+        // Create code layer for fusion
+        const codeLayer = document.createElement('div');
+        codeLayer.id = 'fusion-code-layer';
+        codeLayer.className = 'code-layer';
+        
+        // Get combined code example key
+        const codeKey = fusion.join('+');
+        codeLayer.innerHTML = getCodeExample(codeKey);
+        
+        puzzleArea.appendChild(codeLayer);
+        codeLayer.classList.toggle('visible', gameState.abstractionMode === 'code');
+      }
 
       // Speak the puzzle
       speakAria(stripHtml(puzzle.prompt));
@@ -1781,6 +2183,8 @@
 
         if (isCorrect) {
           playSuccessSound();
+          healCorruption(10); // Heal 10% on correct answer
+          
           puzzleFeedback.className = 'success';
           puzzleFeedback.innerHTML = '✓ ' + puzzle.success;
           puzzleFeedback.style.display = 'block';
@@ -1802,8 +2206,10 @@
           }, 1500);
         } else {
           playErrorSound();
+          addCorruption(15); // Add 15% corruption on wrong answer
+          
           puzzleFeedback.className = 'error';
-          puzzleFeedback.innerHTML = '✗ Not quite. Consider what the pattern is asking...';
+          puzzleFeedback.innerHTML = '✗ Not quite. ARIA becomes more corrupted... (' + gameState.corruption + '% damaged)';
           puzzleFeedback.style.display = 'block';
         }
       };
