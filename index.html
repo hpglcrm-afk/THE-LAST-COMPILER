@@ -104,7 +104,7 @@
     }
 
     /* ═══════════════════════════════════════
-       TITLE SCREEN
+       TITLE SCREEN - IMPROVED
     ═══════════════════════════════════════ */
     #title-screen {
       display: flex;
@@ -114,10 +114,12 @@
       min-height: 100vh;
       text-align: center;
       position: relative;
+      padding: 20px;
     }
 
     .title-container {
       position: relative;
+      margin-bottom: 40px;
     }
 
     .title-main {
@@ -141,10 +143,10 @@
 
     .title-sub {
       font-family: 'Rajdhani', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       color: var(--text-dim);
       letter-spacing: 0.5em;
-      margin-top: 10px;
+      margin-top: 15px;
       font-weight: 300;
     }
 
@@ -164,14 +166,49 @@
     }
 
     .title-divider {
-      width: 200px;
+      width: 300px;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--aria), transparent);
       margin: 30px auto;
     }
 
+    .title-features {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    .title-feature {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    .title-feature span {
+      font-size: 1.2rem;
+    }
+
+    .title-controls {
+      margin-top: 20px;
+      color: var(--text-dimmer);
+      font-size: 0.75rem;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .title-controls kbd {
+      background: var(--bg-light);
+      padding: 3px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--text-dimmer);
+      margin: 0 3px;
+    }
+
     .title-credit {
-      margin-top: 40px;
+      margin-top: 50px;
       font-family: 'Fira Code', monospace;
       font-size: 0.85rem;
       color: var(--text-dimmer);
@@ -181,6 +218,26 @@
     .title-credit .highlight {
       color: var(--aria);
       font-weight: 600;
+    }
+
+    /* Continue button */
+    #continue-btn {
+      background: transparent;
+      border: 1px solid var(--success);
+      color: var(--success);
+      padding: 15px 40px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 15px;
+      display: none;
+      transition: all 0.3s;
+    }
+
+    #continue-btn:hover {
+      background: var(--success);
+      color: var(--bg-deep);
     }
 
     .start-btn {
@@ -523,28 +580,6 @@
       font-weight: 600;
     }
 
-    /* Skip button */
-    #skip-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background: rgba(0,0,0,0.5);
-      border: 1px solid var(--text-dimmer);
-      color: var(--text-dimmer);
-      padding: 10px 18px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.75rem;
-      cursor: pointer;
-      border-radius: 3px;
-      z-index: 100;
-      transition: all 0.3s;
-    }
-
-    #skip-btn:hover {
-      border-color: var(--aria);
-      color: var(--aria);
-    }
-
     /* Concept visualization */
     .concept-viz {
       background: var(--bg-deep);
@@ -658,7 +693,9 @@
       white-space: nowrap;
     }
 
-    /* Sound toggle */
+    /* ═══════════════════════════════════════
+       TOP LEFT - Sound & Voice Controls
+    ═══════════════════════════════════════ */
     #sound-toggle {
       position: fixed;
       top: 20px;
@@ -673,6 +710,197 @@
       border-radius: 3px;
       z-index: 100;
       transition: all 0.3s;
+    }
+
+    #voice-toggle {
+      position: fixed;
+      top: 20px;
+      left: 100px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 8px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #sound-toggle:hover, #voice-toggle:hover {
+      border-color: var(--aria);
+      color: var(--aria);
+    }
+
+    #sound-toggle.muted, #voice-toggle.muted {
+      opacity: 0.5;
+    }
+
+    /* ═══════════════════════════════════════
+       TOP RIGHT - Abstraction Toggle
+    ═══════════════════════════════════════ */
+    #abstraction-toggle {
+      position: fixed;
+      top: 20px;
+      right: 120px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 8px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #abstraction-toggle:hover {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    #abstraction-toggle.code-mode {
+      border-color: var(--success);
+      color: var(--success);
+      background: rgba(0, 255, 157, 0.1);
+    }
+
+    /* ═══════════════════════════════════════
+       TOP CENTER - ARIA Health Bar
+    ═══════════════════════════════════════ */
+    #corruption-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+
+    #corruption-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.6rem;
+      color: var(--corrupt);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    #corruption-bar {
+      width: 120px;
+      height: 6px;
+      background: var(--bg-lighter);
+      border-radius: 3px;
+      overflow: hidden;
+      border: 1px solid var(--text-dimmer);
+    }
+
+    #corruption-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--success), var(--danger), var(--corrupt));
+      transition: width 0.5s ease;
+    }
+
+    /* ═══════════════════════════════════════
+       BOTTOM RIGHT - Game Controls
+    ═══════════════════════════════════════ */
+    #glossary-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    #glossary-btn:hover {
+      border-color: var(--aria);
+      color: var(--aria);
+    }
+
+    #achievements-btn {
+      position: fixed;
+      bottom: 60px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    #achievements-btn:hover {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    /* Skip button */
+    #skip-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 18px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #skip-btn:hover {
+      border-color: var(--aria);
+      color: var(--aria);
+    }
+
+    /* Bottom Center - Memories */
+    #memories-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 100;
+    }
+
+    /* Save indicator */
+    #save-indicator {
+      position: fixed;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success);
+      color: var(--bg-deep);
+      padding: 5px 15px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 100;
+    }
+
+    #save-indicator.visible {
+      opacity: 1;
     }
 
     #voice-toggle {
@@ -758,35 +986,6 @@
       0%, 100% { opacity: 0.8; }
       50% { opacity: 0.9; }
     }
-
-    /* Corruption bar */
-    #corruption-container {
-      position: fixed;
-      top: 50px;
-      left: 20px;
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    #corruption-label {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.65rem;
-      color: var(--corrupt);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    #corruption-bar {
-      width: 100px;
-      height: 4px;
-      background: var(--bg-lighter);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    #corruption-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--success), var(--danger), var(--corrupt));
@@ -1162,28 +1361,8 @@
     }
 
     /* ═══════════════════════════════════════
-       ACHIEVEMENTS PANEL
+       ACHIEVEMENTS PANEL - IMPROVED
     ═══════════════════════════════════════ */
-    #achievements-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: transparent;
-      border: 1px solid var(--text-dimmer);
-      color: var(--text-dimmer);
-      padding: 10px 15px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.75rem;
-      cursor: pointer;
-      border-radius: 4px;
-      z-index: 100;
-    }
-
-    #achievements-btn:hover {
-      border-color: var(--success);
-      color: var(--success);
-    }
-
     #achievements-panel {
       display: none;
       position: fixed;
@@ -1191,7 +1370,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(5, 5, 15, 0.98);
+      backdrop-filter: blur(10px);
       z-index: 9999;
       padding: 40px;
       overflow-y: auto;
@@ -1199,88 +1379,101 @@
 
     #achievements-panel.visible {
       display: block;
+      animation: panelFadeIn 0.3s ease;
+    }
+
+    @keyframes panelFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .panel-title {
       font-family: 'Orbitron', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: var(--success);
+      text-shadow: 0 0 20px var(--success);
     }
 
     .close-panel {
       background: transparent;
       border: 1px solid var(--text-dimmer);
       color: var(--text-dimmer);
-      padding: 10px 20px;
+      padding: 12px 25px;
       cursor: pointer;
       border-radius: 4px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .close-panel:hover {
+      border-color: var(--corrupt);
+      color: var(--corrupt);
     }
 
     .achievement-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .achievement-card {
-      background: var(--bg-light);
-      border: 1px solid var(--text-dimmer);
-      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(20,20,40,0.8) 0%, rgba(10,10,25,0.8) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
       padding: 20px;
       display: flex;
-      gap: 15px;
+      gap: 20px;
       align-items: center;
+      transition: all 0.3s;
     }
 
     .achievement-card.unlocked {
       border-color: var(--success);
-      background: rgba(0, 255, 157, 0.1);
+      background: linear-gradient(135deg, rgba(0,255,157,0.1) 0%, rgba(0,50,30,0.3) 100%);
+      box-shadow: 0 0 20px rgba(0,255,157,0.2);
+    }
+
+    .achievement-card.unlocked:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 30px rgba(0,255,157,0.3);
     }
 
     .achievement-icon {
-      font-size: 2rem;
+      font-size: 2.5rem;
+      filter: grayscale(1);
+    }
+
+    .achievement-card.unlocked .achievement-icon {
+      filter: grayscale(0);
     }
 
     .achievement-info h4 {
       color: var(--text);
       margin-bottom: 5px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
     }
 
     .achievement-info p {
       color: var(--text-dimmer);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
     }
 
     /* ═══════════════════════════════════════
-       GLOSSARY PANEL
+       GLOSSARY PANEL - IMPROVED
     ═══════════════════════════════════════ */
-    #glossary-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 120px;
-      background: transparent;
-      border: 1px solid var(--text-dimmer);
-      color: var(--text-dimmer);
-      padding: 10px 15px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.75rem;
-      cursor: pointer;
-      border-radius: 4px;
-      z-index: 100;
-    }
-
-    #glossary-btn:hover {
-      border-color: var(--aria);
-      color: var(--aria);
-    }
-
     #glossary-panel {
       display: none;
       position: fixed;
@@ -1288,7 +1481,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(5, 5, 15, 0.98);
+      backdrop-filter: blur(10px);
       z-index: 9999;
       padding: 40px;
       overflow-y: auto;
@@ -1300,37 +1494,56 @@
 
     .glossary-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 25px;
     }
 
     .glossary-card {
-      background: var(--bg-light);
-      border: 1px solid var(--text-dimmer);
-      border-radius: 8px;
-      padding: 20px;
+      background: linear-gradient(135deg, rgba(20,20,50,0.8) 0%, rgba(10,10,30,0.8) 100%);
+      border: 1px solid rgba(0,247,255,0.2);
+      border-radius: 12px;
+      padding: 25px;
+      transition: all 0.3s;
+    }
+
+    .glossary-card:hover {
+      border-color: var(--aria);
+      box-shadow: 0 0 25px rgba(0,247,255,0.2);
+      transform: translateY(-3px);
     }
 
     .glossary-card h4 {
       color: var(--aria);
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       font-family: 'Fira Code', monospace;
+      font-size: 1.1rem;
+      text-shadow: 0 0 10px var(--aria);
     }
 
     .glossary-code {
-      background: #000;
-      padding: 10px;
-      border-radius: 4px;
+      background: rgba(0,0,0,0.5);
+      padding: 15px;
+      border-radius: 8px;
       font-family: 'Fira Code', monospace;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--success);
-      margin: 10px 0;
+      margin: 15px 0;
+      border-left: 3px solid var(--success);
     }
 
     .glossary-desc {
       color: var(--text-dim);
-      font-size: 0.9rem;
-      line-height: 1.6;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .glossary-example {
+      color: var(--text-dimmer);
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
 
     /* ═══════════════════════════════════════
@@ -1540,7 +1753,20 @@
         <p class="title-sub">A JOURNEY INTO COMPUTATIONAL THINKING</p>
       </div>
       <div class="title-divider"></div>
+      
+      <div class="title-features">
+        <div class="title-feature"><span>💾</span> Auto-Save</div>
+        <div class="title-feature"><span>🏆</span> 13 Achievements</div>
+        <div class="title-feature"><span>📖</span> Glossary</div>
+        <div class="title-feature"><span>⚡</span> Fusion Puzzles</div>
+      </div>
+      
       <button class="start-btn" id="start-btn" onclick="console.log('Button clicked'); try { startGame(); } catch(e) { console.error(e); alert('Error: ' + e.message); }">Initialize System</button>
+      
+      <div class="title-controls">
+        <kbd>G</kbd> Glossary &nbsp; <kbd>A</kbd> Achievements &nbsp; <kbd>S</kbd> Story/Code &nbsp; <kbd>ESC</kbd> Close
+      </div>
+      
       <p class="title-credit">developed by <span class="highlight">BhMn</span></p>
     </div>
 
@@ -3807,6 +4033,47 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
         p.style.animationDuration = (10 + Math.random() * 10) + 's';
         document.body.appendChild(p);
       }
+
+      // Update time played every second
+      setInterval(() => {
+        if (gameState.isLoaded) {
+          const elapsed = Math.floor((Date.now() - gameState.startTime) / 1000);
+          const mins = Math.floor(elapsed / 60);
+          const secs = elapsed % 60;
+          // Could display time somewhere if needed
+        }
+      }, 1000);
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        // ESC to close panels
+        if (e.key === 'Escape') {
+          closeAchievements();
+          closeGlossary();
+          closeMemory();
+          closeYourCode();
+        }
+        // G for glossary
+        if (e.key === 'g' || e.key === 'G') {
+          if (document.getElementById('glossary-panel').classList.contains('visible')) {
+            closeGlossary();
+          } else {
+            showGlossary();
+          }
+        }
+        // A for achievements
+        if (e.key === 'a' || e.key === 'A') {
+          if (document.getElementById('achievements-panel').classList.contains('visible')) {
+            closeAchievements();
+          } else {
+            showAchievements();
+          }
+        }
+        // S to toggle story/code
+        if (e.key === 's' || e.key === 'S') {
+          toggleAbstraction();
+        }
+      });
     };
   </script>
 </body>
