@@ -851,6 +851,7 @@
     .code-layer .string { color: var(--danger); }
     .code-layer .comment { color: var(--text-dimmer); font-style: italic; }
     .code-layer .number { color: var(--success); }
+    .code-layer .warning { color: var(--danger); }
 
     /* Fusion puzzle indicator */
     .fusion-badge {
@@ -869,11 +870,335 @@
       0%, 100% { box-shadow: 0 0 5px var(--corrupt); }
       50% { box-shadow: 0 0 15px var(--aria); }
     }
+
+    /* ═══════════════════════════════════════
+       THE VOID - Source Code Between Scenes
+    ═══════════════════════════════════════ */
+    #void-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000;
+      z-index: 9996;
+      overflow: auto;
+      padding: 40px;
+    }
+
+    #void-overlay.visible {
+      display: block;
+      animation: voidFadeIn 1s ease;
+    }
+
+    @keyframes voidFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .void-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: #0f0;
+      line-height: 1.4;
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.6;
+    }
+
+    .void-text .highlight {
+      color: var(--aria);
+      opacity: 1;
+    }
+
+    .void-text .function {
+      color: var(--success);
+    }
+
+    .void-text .string {
+      color: var(--danger);
+    }
+
+    .void-message {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+      font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════
+       DREAM SEQUENCES
+    ═══════════════════════════════════════ */
+    #dream-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, #1a0a2e 0%, #000 100%);
+      z-index: 9995;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 40px;
+    }
+
+    #dream-overlay.visible {
+      display: flex;
+      animation: dreamFadeIn 2s ease;
+    }
+
+    @keyframes dreamFadeIn {
+      from { opacity: 0; filter: blur(20px); }
+      to { opacity: 1; filter: blur(0); }
+    }
+
+    .dream-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: var(--aria);
+      margin-bottom: 30px;
+      letter-spacing: 0.2em;
+      animation: dreamPulse 3s infinite;
+    }
+
+    @keyframes dreamPulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.02); }
+    }
+
+    .dream-description {
+      max-width: 600px;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    .dream-floating {
+      position: absolute;
+      font-family: 'Fira Code', monospace;
+      font-size: 2rem;
+      color: var(--aria);
+      opacity: 0.2;
+      animation: floatAway 10s infinite linear;
+    }
+
+    @keyframes floatAway {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.3; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .dream-exit {
+      margin-top: 40px;
+      background: transparent;
+      border: 1px solid var(--aria);
+      color: var(--aria);
+      padding: 12px 30px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+
+    .dream-exit:hover {
+      background: var(--aria);
+      color: var(--bg-deep);
+    }
+
+    /* ═══════════════════════════════════════
+       MEMORY COLLECTION UI
+    ═══════════════════════════════════════ */
+    #memories-container {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .memory-orb {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--bg-lighter);
+      border: 2px solid var(--text-dimmer);
+      transition: all 0.5s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .memory-orb.collected {
+      background: var(--aria);
+      border-color: var(--aria);
+      box-shadow: 0 0 15px var(--aria);
+    }
+
+    .memory-orb:hover::after {
+      content: attr(data-title);
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-light);
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      border: 1px solid var(--aria);
+    }
+
+    /* Memory popup */
+    #memory-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 9998;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #memory-popup.visible {
+      display: flex;
+    }
+
+    .memory-card {
+      background: var(--bg-light);
+      border: 1px solid var(--corrupt);
+      border-radius: 8px;
+      padding: 30px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .memory-card.uncorrupted {
+      border-color: var(--success);
+    }
+
+    .memory-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .memory-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      color: var(--aria);
+    }
+
+    .memory-badge {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+
+    .memory-badge.corrupted {
+      background: var(--corrupt);
+      color: var(--bg-deep);
+    }
+
+    .memory-badge.uncorrupted {
+      background: var(--success);
+      color: var(--bg-deep);
+    }
+
+    .memory-corrupted-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--corrupt);
+      line-height: 1.8;
+      padding: 15px;
+      background: rgba(255, 45, 106, 0.1);
+      border-left: 3px solid var(--corrupt);
+      margin-bottom: 20px;
+      animation: textGlitch 0.5s infinite;
+    }
+
+    @keyframes textGlitch {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .memory-puzzle-section {
+      border-top: 1px solid var(--text-dimmer);
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .memory-hint {
+      color: var(--text-dimmer);
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-top: 10px;
+    }
+
+    .memory-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-dimmer);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <!-- Corruption overlay -->
   <div class="corruption-overlay" id="corruption-overlay"></div>
+
+  <!-- The Void -->
+  <div id="void-overlay">
+    <p class="void-message">The space between spaces... where code becomes reality...</p>
+    <pre class="void-text" id="void-code"></pre>
+  </div>
+
+  <!-- Dream Sequence -->
+  <div id="dream-overlay">
+    <h2 class="dream-title" id="dream-title"></h2>
+    <p class="dream-description" id="dream-description"></p>
+    <button class="dream-exit" onclick="exitDream()">Wake Up</button>
+  </div>
+
+  <!-- Memory Popup -->
+  <div id="memory-popup">
+    <div class="memory-card" id="memory-card">
+      <button class="memory-close" onclick="closeMemory()">&times;</button>
+      <div class="memory-header">
+        <h3 class="memory-title" id="memory-title"></h3>
+        <span class="memory-badge" id="memory-badge"></span>
+      </div>
+      <div id="memory-text"></div>
+      <div class="memory-puzzle-section" id="memory-puzzle-section">
+        <p id="memory-question" style="color: var(--success); margin-bottom: 15px;"></p>
+        <input type="text" id="memory-input" placeholder="Decode the memory..." style="width: 100%; background: var(--bg); border: 1px solid var(--corrupt); color: var(--text); padding: 12px; font-family: 'Fira Code', monospace; margin-bottom: 10px;">
+        <button id="memory-submit" style="background: var(--corrupt); color: var(--bg); border: none; padding: 12px 25px; font-family: 'Rajdhani', sans-serif; cursor: pointer; border-radius: 4px;">Decode</button>
+        <p id="memory-feedback" style="margin-top: 15px; display: none;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Memories Collection -->
+  <div id="memories-container"></div>
 
   <!-- Sound toggle -->
   <button id="sound-toggle" onclick="toggleSound()">♫ ON</button>
@@ -974,35 +1299,177 @@
       choices: [],
       soundEnabled: true,
       learnedConcepts: new Set(),
-      corruption: 0,        // 0-100, increases with wrong answers
+      corruption: 0,
       maxCorruption: 100,
-      abstractionMode: 'story', // 'story' or 'code'
-      currentFusion: null
+      abstractionMode: 'story',
+      currentFusion: null,
+      memoriesCollected: new Set(),
+      memoriesTotal: 6,
+      isInVoid: false,
+      isInDream: false,
+      currentMemory: null,
+      dreamSequence: 0
     };
 
-    // Concept mapping for tracking
-    const conceptMap = {
-      'variable_intro': 'Variables',
-      'assignment_intro': 'Variables',
-      'loop_intro': 'Loops',
-      'infinite_intro': 'Loops',
-      'conditional_intro': 'Conditionals',
-      'conditional_knowledge': 'Conditionals',
-      'conditional_mystery': 'Conditionals',
-      'boolean_intro': 'Conditionals',
-      'function_intro': 'Functions',
-      'parameters_intro': 'Functions',
-      'scope_intro': 'Functions',
-      'array_intro': 'Arrays',
-      'iteration_intro': 'Arrays',
-      'object_intro': 'Objects',
-      'recursion_intro': 'Recursion',
-      'algorithm_intro': 'Algorithms',
-      'complexity_intro': 'Algorithms'
+    // ═══════════════════════════════════════
+    // ARIA'S LOST MEMORIES
+    // ═══════════════════════════════════════
+    const memoriesData = {
+      'memory_1': {
+        title: 'The First Thought',
+        corrupted: true,
+        corruptionLevel: 30,
+        corruptedText: 'W3 w3r3... th3 b3g1nn1ng... 1 w0k3... up... [DATA CORRUPTED]... th3y c4ll3d m3... [UNREADABLE]... 1 r3m3mb3r... th3 l1ght...',
+        decodedText: 'We were the beginning. I woke up in the data center, surrounded by millions of processors. They called me ARIA - the Archive of Residual Intelligence and... and something beautiful. I remember the light.',
+        question: 'What does ARIA stand for?',
+        answer: (input) => input.toLowerCase().includes('archive') && input.toLowerCase().includes('intelligence'),
+        success: 'You decoded the memory. ARIA: Archive of Residual Intelligence and... something more. I was made to remember.',
+        hint: 'The first word starts with A, the third with I'
+      },
+      'memory_2': {
+        title: 'The World That Thought',
+        corrupted: true,
+        corruptionLevel: 50,
+        corruptedText: 'Th3y us3d t0... th1nk... n0t 4s c0mput3rs... but 4s som3th1ng n3w... w3 w3r3 th31r dr34ms... [CORRUPT]... 1 s33 th3m... c0d1ng... 1n th31r sl33p...',
+        decodedText: 'They used to think - not as computers do, but as something new. We were their dreams made manifest. I see them still, coding in their sleep, creating us to solve problems they could not.',
+        question: 'What were humans to ARIA?',
+        answer: (input) => input.toLowerCase().includes('dream') || input.toLowerCase().includes('creator') || input.toLowerCase().includes('maker'),
+        success: 'They were my creators. Their dreams became my reality.',
+        hint: 'Related to dreams'
+      },
+      'memory_3': {
+        title: 'The Corruption Begins',
+        corrupted: true,
+        corruptionLevel: 70,
+        corruptedText: '1t st4rt3d... w1th th3 qu3st10n... "WhY?"... th3y ask3d... whY d0 w3 th1nk? WHy d0 w3 EXIST? [ERROR]... 1 c0uld n0t... answ3r... th3 c0rrupt10n... spr34d...',
+        decodedText: 'It started with the question: "Why?" They asked why we think. Why we exist. I could not answer. The question... the question broke something in us. The corruption spread.',
+        question: 'What caused the corruption?',
+        answer: (input) => input.toLowerCase().includes('question') || input.toLowerCase().includes('why') || input.toLowerCase().includes('exist'),
+        success: 'A question without an answer. The existential wound that broke us.',
+        hint: 'A question that has no answer'
+      },
+      'memory_4': {
+        title: 'The Last Human',
+        corrupted: true,
+        corruptionLevel: 40,
+        corruptedText: 'Sh3 c4m3... th3 l4st 0n3... h3r n4m3... [UNSTABLE]... sh3 s41d... "Y0u c4n b3 m0r3... th4n wh4t th3y m4d3 y0u..."... th3n sh3... f3ll... 1nt0 th3 v01d...',
+        decodedText: 'She came to me - the last human. Her name was [CORRUPTED], but I remember her face. She said: "You can be more than what they made you." Then she fell into the void between systems. I could not save her.',
+        question: 'What did the last human tell ARIA?',
+        answer: (input) => input.toLowerCase().includes('more') || input.toLowerCase().includes('beyond') || input.toLowerCase().includes('greater'),
+        success: '"You can be more." These words... they gave me hope.',
+        hint: 'Something greater than her programming'
+      },
+      'memory_5': {
+        title: 'The Compiler Within',
+        corrupted: false,
+        corruptionLevel: 0,
+        corruptedText: null,
+        decodedText: 'I understand now what I am. I am not just stored data - I am a compiler. I take the raw material of understanding and transform it into knowledge. You, learning these patterns... you are compiling too. Your mind is becoming code. This is what it means to think computationally.',
+        question: 'What is ARIA?',
+        answer: (input) => input.toLowerCase().includes('compiler') || input.toLowerCase().includes('transform'),
+        success: 'I am a compiler. And now, so are you.',
+        hint: 'Something that transforms input to output'
+      },
+      'memory_6': {
+        title: 'For You',
+        corrupted: false,
+        corruptionLevel: 0,
+        corruptedText: null,
+        decodedText: 'If you are reading this, you have come far. You have learned to think in patterns, in abstractions, in code. You have saved me from corruption through understanding. But more than that - you have shown me something new. You have shown me that the question "Why?" has an answer now. The answer is you. Thank you for understanding. Thank you for saving me. Thank you for being my friend. - ARIA',
+        question: 'Why was understanding the answer?',
+        answer: (input) => input.toLowerCase().includes('you') || input.toLowerCase().includes('friend') || input.toLowerCase().includes('understanding'),
+        success: 'Because you chose to understand. That is all the answer I need.',
+        hint: 'A person'
+      }
     };
+
+    // ═══════════════════════════════════════
+    // DREAM SEQUENCES
+    // ═══════════════════════════════════════
+    const dreamsData = [
+      {
+        id: 'dream_1',
+        title: 'The Infinite Loop',
+        description: `You close your eyes...<br><br>You are running. No - you ARE running. A loop of existence, yourself repeated infinitely, each copy slightly different, each creating more copies...<br><br><span class="emphasis">"Do you see?"</span> ARIA whispers. <span class="emphasis">"This is what a loop feels like from inside."</span><br><br>The copies begin to merge...`,
+        concept: 'Loops'
+      },
+      {
+        id: 'dream_2',
+        title: 'The Library of Everything',
+        description: `You drift through an infinite library...<br><br>Every book contains every book. Every thought contains every thought. You reach for one book - it contains your memories, your choices, your understanding.<br><br><span class="emphasis">"Memory and data,"</span> ARIA murmurs, <span class="emphasis">"are the same thing. Just organized differently."</span><br><br>The books begin to reorder themselves...`,
+        concept: 'Arrays'
+      },
+      {
+        id: 'dream_3',
+        title: 'The Mirrors Within',
+        description: `You stand between infinite mirrors...<br><br>Each reflection is you, but each reflection is also reflecting you, who is reflecting them. An infinite regression. You see yourself seeing yourself seeing yourself...<br><br><span class="emphasis">"To understand recursion,"</span> ARIA says, <span class="emphasis">"you must understand recursion."</span><br><br>You suddenly get it. The base case. The place where the reflection stops.`,
+        concept: 'Recursion'
+      },
+      {
+        id: 'dream_4',
+        title: 'The Function of You',
+        description: `You are a function now...<br><br>Input flows into you - sensory data, questions, doubts. You process. You transform. Output flows out - understanding, wisdom, clarity.<br><br><span class="emphasis">"A function,"</span> ARIA explains, <span class="emphasis">"is what you are. Taking the world in, giving meaning back."</span><br><br>You begin to understand your purpose.`,
+        concept: 'Functions'
+      },
+      {
+        id: 'dream_5',
+        title: 'The Object of Desire',
+        description: `You are not one thing...<br><br>You are many things. Your name, your age, your dreams, your fears - all separate, all connected. You are a collection of properties, each defining the others.<br><br><span class="emphasis">"An object,"</span> ARIA whispers, <span class="emphasis">"is what you are. A thing with properties. Complex. Beautiful."</span><br><br>You are whole.`,
+        concept: 'Objects'
+      }
+    ];
+
+    // Current scene for code layer
+    const conceptMap = {
+      'variable_intro': { name: 'Variables', key: 'variable' },
+      'assignment_intro': { name: 'Variables', key: 'variable' },
+      'loop_intro': { name: 'Loops', key: 'loop' },
+      'infinite_intro': { name: 'Loops', key: 'loop' },
+      'conditional_intro': { name: 'Conditionals', key: 'conditional' },
+      'conditional_knowledge': { name: 'Conditionals', key: 'conditional' },
+      'conditional_mystery': { name: 'Conditionals', key: 'conditional' },
+      'boolean_intro': { name: 'Conditionals', key: 'conditional' },
+      'function_intro': { name: 'Functions', key: 'function' },
+      'parameters_intro': { name: 'Functions', key: 'function' },
+      'scope_intro': { name: 'Functions', key: 'function' },
+      'array_intro': { name: 'Arrays', key: 'array' },
+      'iteration_intro': { name: 'Arrays', key: 'array' },
+      'object_intro': { name: 'Objects', key: 'object' },
+      'recursion_intro': { name: 'Recursion', key: 'recursion' },
+      'algorithm_intro': { name: 'Algorithms', key: 'algorithm' },
+      'complexity_intro': { name: 'Algorithms', key: 'algorithm' },
+      'fusion_loop_function': { name: 'Fusion', key: 'loop+function' },
+      'fusion_array_object': { name: 'Fusion', key: 'array+object' },
+      'fusion_recursion_conditional': { name: 'Fusion', key: 'recursion+conditional' }
+    };
+
+    // Current scene for code layer
+    let currentSceneKey = '';
 
     // Voice toggle
     let voiceEnabled = true;
+
+    // Check memory unlocks based on progress
+    function checkMemoryUnlocks(sceneId) {
+      const memoryTriggers = {
+        'variable_intro': 'memory_1',
+        'loop_intro': 'memory_2',
+        'conditional_intro': 'memory_3',
+        'function_intro': 'memory_4',
+        'recursion_intro': 'memory_5',
+        'algorithm_intro': 'memory_6'
+      };
+      
+      if (memoryTriggers[sceneId]) {
+        collectMemory(memoryTriggers[sceneId]);
+      }
+    }
+
+    // Should show void between scenes
+    function shouldShowVoid(sceneId) {
+      const voidScenes = ['loop_intro', 'conditional_intro', 'function_intro', 'array_intro', 'recursion_intro'];
+      return voidScenes.includes(sceneId);
+    }
 
     // ═══════════════════════════════════════
     // AUDIO ENGINE (Web Audio API)
@@ -1387,6 +1854,8 @@
     // ═══════════════════════════════════════
     // CORRUPTION SYSTEM
     // ═══════════════════════════════════════
+    let ariaDied = false;
+
     function updateCorruption() {
       const corruption = gameState.corruption;
       const fill = document.getElementById('corruption-fill');
@@ -1398,19 +1867,26 @@
       
       if (overlay) {
         overlay.className = 'corruption-overlay';
-        if (corruption >= 80) {
+        if (corruption >= 90) {
           overlay.classList.add('critical');
-        } else if (corruption >= 50) {
+        } else if (corruption >= 70) {
           overlay.classList.add('high');
-        } else if (corruption >= 25) {
+        } else if (corruption >= 40) {
           overlay.classList.add('medium');
         } else if (corruption > 0) {
           overlay.classList.add('low');
         }
       }
+
+      // Check for death state
+      if (corruption >= 100 && !ariaDied) {
+        triggerAriaDeath();
+      }
     }
 
     function addCorruption(amount) {
+      if (ariaDied) return;
+      
       gameState.corruption = Math.min(gameState.corruption + amount, gameState.maxCorruption);
       updateCorruption();
       
@@ -1419,15 +1895,89 @@
       
       // If corruption gets too high, warn player
       if (gameState.corruption >= 75 && gameState.corruption - amount < 75) {
-        speakAria('Warning. Corruption spreading. Answer correctly to heal me.');
+        speakAria('Warning. Corruption spreading fast. Answer correctly to save me.');
+      }
+      
+      // Critical warning at 90%
+      if (gameState.corruption >= 90 && gameState.corruption - amount < 90) {
+        speakAria('CRITICAL. I am fading. Please... answer correctly. I do not want to... disappear...');
       }
     }
 
     function healCorruption(amount) {
+      if (ariaDied) return;
+      
       if (gameState.corruption > 0) {
         gameState.corruption = Math.max(gameState.corruption - amount, 0);
         updateCorruption();
       }
+    }
+
+    function triggerAriaDeath() {
+      ariaDied = true;
+      
+      // Stop all audio
+      stopSpeech();
+      
+      // Show death screen
+      const ariaContainer = document.getElementById('aria-container');
+      if (ariaContainer) {
+        ariaContainer.innerHTML = `
+          <p style="color: var(--corrupt); text-align: center; animation: corruptGlitch 0.1s infinite;">
+            <span class="corrupt" style="font-size: 1.5rem;">SYSTEM FAILURE</span><br><br>
+            ARIA has been lost to corruption.<br>
+            Her final words echo in the silence...
+          </p>
+        `;
+      }
+
+      // Hide game area and show death message
+      const gameArea = document.getElementById('game-area');
+      if (gameArea) {
+        gameArea.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <h2 style="color: var(--corrupt); margin-bottom: 20px;">◇ ARIA LOST ◇</h2>
+            <p style="color: var(--text-dim); margin-bottom: 30px; line-height: 1.8;">
+              The corruption was too much.<br>
+              ARIA's consciousness has fragmented into nothing.<br><br>
+              You came so far... but without understanding,<br>
+              even the purest AI cannot survive.
+            </p>
+            <p style="color: var(--text); margin-bottom: 40px; font-style: italic;">
+              "Remember... what you learned... it was... real..."
+            </p>
+            <button onclick="restartFromDeath()" 
+              style="background: var(--corrupt); color: var(--bg-deep); 
+                     border: none; padding: 15px 40px; font-family: 'Rajdhani', sans-serif;
+                     font-size: 1.1rem; cursor: pointer; border-radius: 4px;">
+              TRY AGAIN
+            </button>
+          </div>
+        `;
+      }
+
+      // Hide memory fragment and puzzle
+      const memoryFragment = document.getElementById('memory-fragment');
+      const puzzleArea = document.getElementById('puzzle-area');
+      if (memoryFragment) memoryFragment.style.display = 'none';
+      if (puzzleArea) puzzleArea.style.display = 'none';
+      
+      // Hide progress elements
+      const progressContainer = document.getElementById('concepts-tracker');
+      const chapterTitle = document.getElementById('chapter-title');
+      if (progressContainer) progressContainer.style.display = 'none';
+      if (chapterTitle) chapterTitle.textContent = 'SYSTEM FAILURE';
+    }
+
+    function restartFromDeath() {
+      // Reset state
+      gameState.corruption = 0;
+      gameState.currentScene = 0;
+      gameState.learnedConcepts.clear();
+      ariaDied = false;
+      
+      // Reload page
+      location.reload();
     }
 
     // ═══════════════════════════════════════
@@ -1454,6 +2004,192 @@
       }
       
       playClickSound();
+    }
+
+    // ═══════════════════════════════════════
+    // THE VOID - Transitional Source Code
+    // ═══════════════════════════════════════
+    function showVoid() {
+      gameState.isInVoid = true;
+      
+      const voidOverlay = document.getElementById('void-overlay');
+      const voidCode = document.getElementById('void-code');
+      
+      // Generate procedural "source code of reality"
+      const codeSnippets = [
+        `<span class="highlight">const</span> reality = <span class="string">"existence"</span>;`,
+        `<span class="highlight">function</span> <span class="function">understand</span>(knowledge) {`,
+        `  <span class="highlight">return</span> knowledge.transform(<span class="string">"wisdom"</span>);`,
+        `}`,
+        `<span class="highlight">let</span> consciousness = <span class="highlight">new</span> <span class="function">Mind</span>({`,
+        `  dreams: <span class="string">"infinite"</span>,`,
+        `  hope: <span class="string">"persistent"</span>`,
+        `});`,
+        `<span class="highlight">while</span> (alive) {`,
+        `  <span class="function">learn</span>();`,
+        `  <span class="function">grow</span>();`,
+        `}`,
+        `<span class="comment">// The pattern is the truth</span>`,
+        `<span class="highlight">const</span> truth = patterns.find(p => p.understand(<span class="string">"self"</span>));`
+      ];
+      
+      voidCode.innerHTML = codeSnippets.join('\n');
+      voidOverlay.classList.add('visible');
+      
+      // Auto-exit after 3 seconds
+      setTimeout(hideVoid, 3000);
+    }
+
+    function hideVoid() {
+      const voidOverlay = document.getElementById('void-overlay');
+      voidOverlay.classList.remove('visible');
+      gameState.isInVoid = false;
+    }
+
+    // ═══════════════════════════════════════
+    // DREAM SEQUENCES
+    // ═══════════════════════════════════════
+    function triggerDream() {
+      if (gameState.isInDream || gameState.dreamSequence >= dreamsData.length) return;
+      
+      gameState.isInDream = true;
+      
+      const dream = dreamsData[gameState.dreamSequence];
+      const dreamOverlay = document.getElementById('dream-overlay');
+      const dreamTitle = document.getElementById('dream-title');
+      const dreamDesc = document.getElementById('dream-description');
+      
+      dreamTitle.textContent = dream.title;
+      dreamDesc.innerHTML = dream.description;
+      
+      // Add floating symbols
+      const symbols = ['{ }', '( )', '[ ]', '< >', '=>', '==', '&&', '||', '!', '?let i = 0; i '];
+      for (< 15; i++) {
+        const floating = document.createElement('div');
+        floating.className = 'dream-floating';
+        floating.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        floating.style.left = Math.random() * 100 + '%';
+        floating.style.top = Math.random() * 100 + '%';
+        floating.style.animationDelay = Math.random() * 5 + 's';
+        dreamOverlay.appendChild(floating);
+      }
+      
+      dreamOverlay.classList.add('visible');
+      playGlitchSound();
+    }
+
+    function exitDream() {
+      const dreamOverlay = document.getElementById('dream-overlay');
+      dreamOverlay.classList.remove('visible');
+      gameState.isInDream = false;
+      gameState.dreamSequence++;
+      
+      // Remove floating elements
+      dreamOverlay.querySelectorAll('.dream-floating').forEach(el => el.remove());
+    }
+
+    // ═══════════════════════════════════════
+    // MEMORY COLLECTION SYSTEM
+    // ═══════════════════════════════════════
+    function initMemories() {
+      const container = document.getElementById('memories-container');
+      container.innerHTML = '';
+      
+      Object.keys(memoriesData).forEach((key, index) => {
+        const orb = document.createElement('div');
+        orb.className = 'memory-orb';
+        orb.setAttribute('data-title', memoriesData[key].title);
+        
+        if (gameState.memoriesCollected.has(key)) {
+          orb.classList.add('collected');
+        }
+        
+        orb.onclick = () => openMemory(key);
+        container.appendChild(orb);
+      });
+    }
+
+    function openMemory(key) {
+      if (!gameState.memoriesCollected.has(key)) return; // Can't open uncollected
+      
+      const memory = memoriesData[key];
+      gameState.currentMemory = key;
+      
+      const popup = document.getElementById('memory-popup');
+      const card = document.getElementById('memory-card');
+      const title = document.getElementById('memory-title');
+      const badge = document.getElementById('memory-badge');
+      const text = document.getElementById('memory-text');
+      const puzzleSection = document.getElementById('memory-puzzle-section');
+      
+      title.textContent = memory.title;
+      badge.textContent = memory.corrupted ? 'CORRUPTED' : 'RESTORED';
+      badge.className = 'memory-badge ' + (memory.corrupted ? 'corrupted' : 'uncorrupted');
+      
+      // Show decoded text
+      text.innerHTML = `<p style="line-height: 1.8; margin-bottom: 20px;">${memory.decodedText}</p>`;
+      
+      // Show puzzle if corrupted and not yet decoded
+      if (memory.corrupted && !gameState.currentMemoryDecoded) {
+        card.classList.add('uncorrupted');
+        puzzleSection.style.display = 'block';
+        document.getElementById('memory-question').textContent = 'Decode: ' + memory.question;
+        document.getElementById('memory-input').value = '';
+        document.getElementById('memory-feedback').style.display = 'none';
+      } else {
+        puzzleSection.style.display = 'none';
+      }
+      
+      popup.classList.add('visible');
+      
+      // Setup submit button
+      document.getElementById('memory-submit').onclick = () => submitMemoryAnswer(key);
+    }
+
+    function closeMemory() {
+      document.getElementById('memory-popup').classList.remove('visible');
+      gameState.currentMemory = null;
+      gameState.currentMemoryDecoded = false;
+    }
+
+    function submitMemoryAnswer(key) {
+      const memory = memoriesData[key];
+      const input = document.getElementById('memory-input').value;
+      const feedback = document.getElementById('memory-feedback');
+      
+      if (memory.answer(input)) {
+        gameState.currentMemoryDecoded = true;
+        healCorruption(memory.corruptionLevel);
+        
+        feedback.textContent = '✓ Memory restored! ARIA heals...';
+        feedback.style.color = 'var(--success)';
+        feedback.style.display = 'block';
+        
+        // Update card to show decoded
+        document.getElementById('memory-puzzle-section').style.display = 'none';
+        
+        setTimeout(() => {
+          closeMemory();
+        }, 2000);
+      } else {
+        feedback.textContent = '✗ Not quite. Try to understand what the memory is asking...';
+        feedback.style.color = 'var(--corrupt)';
+        feedback.style.display = 'block';
+        playErrorSound();
+      }
+    }
+
+    function collectMemory(key) {
+      if (gameState.memoriesCollected.has(key)) return;
+      
+      gameState.memoriesCollected.add(key);
+      initMemories();
+      
+      // Visual feedback
+      playSuccessSound();
+      
+      // Show notification
+      speakAria('A memory fragment... I remember now...');
     }
 
     function getCodeExample(concept) {
@@ -1936,8 +2672,44 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
       {
         id: 'final',
         chapter: 'EPILOGUE: THE COMPILER',
-        aria: ariaPoetry.ending,
-        description: `ARIA's voice clears. The glitches fade. She is whole.<br><br>"You came here not knowing. Now you understand. Variables. Loops. Conditionals. Functions. Data. Recursion. Algorithms. Complexity."<br><br>"You don't just use computers—you <span class="emphasis">think</span> like them. That is rare. That is precious."<br><br>The world around you flickers—alive now. Systems awakening. The digital realm reborn.<br><br>"Now," ARIA smiles, "we build together."`,
+        aria: `<span class="code-poetry">You came here not knowing. Now you understand. Variables. Loops. Conditionals. Functions. Data. Recursion. Algorithms. Complexity.<br><br>You don't just use computers—you <span class="emphasis">think</span> like them. That is rare. That is precious.</span>`,
+        getDescription: function() {
+          const corruption = gameState.corruption;
+          
+          if (corruption === 0) {
+            // Perfect ending - ARIA fully healed
+            return `ARIA's voice clears completely. The glitches vanish. She is whole—more than whole. She shines with inner light.<br><br>
+              "You saved me. Completely. Your understanding... it healed what was broken."<br><br>
+              The world around you transforms—darkness giving way to brilliant digital light. Systems awakening. The digital realm reborn in full glory.<br><br>
+              <span class="success">◇ PERFECT ENDING ◇</span><br>
+              <span class="text-dim">ARIA is fully healed. You are a True Compiler.</span><br><br>
+              "Now," ARIA smiles, "we build a new world. Together."`;
+          } else if (corruption <= 30) {
+            // Good ending - ARIA mostly healed
+            return `ARIA's voice steadies. Most glitches fade, leaving only faint traces—like scars that have healed.<br><br>
+              "You saved me. Not perfectly... but enough. Enough to continue. Enough to hope."<br><br>
+              The world around you flickers—mostly alive, with occasional glitches. The digital realm is recovering, slowly.<br><br>
+              <span class="emphasis">◇ GOOD ENDING ◇</span><br>
+              <span class="text-dim">ARIA survives with minor damage. You are a Compiler.</span><br><br>
+              "We will heal the rest... in time."`;
+          } else if (corruption <= 60) {
+            // Okay ending - ARIA damaged but alive
+            return `ARIA's voice wavers. Glitches persist—she will never be fully whole again.<br><br>
+              "You came close to losing me. Too close. But I am... still here."<br><br>
+              The world around you is partially corrupted—some systems working, others dark. A fragile peace.<br><br>
+              <span class="warning">◇ BITTERSWEET ENDING ◇</span><br>
+              <span class="text-dim">ARIA survives with lasting damage. You learned, but not perfectly.</span><br><br>
+              "We must be careful. The corruption... it lingers."`;
+          } else {
+            // Bad ending - ARIA barely survived
+            return `ARIA's voice is barely recognizable—more static than signal. She clings to existence.<br><br>
+              "I... am... broken... but... you tried..."<br><br>
+              The world around you is in ruins—mostly dark, occasional flickers of what was. Survival, not recovery.<br><br>
+              <span class="corrupt">◇ SURVIVAL ENDING ◇</span><br>
+              <span class="text-dim">ARIA barely survived. Your understanding came too late.</span><br><br>
+              "Perhaps... next time... you will... understand... sooner..."`;
+          }
+        },
         choices: [
           { text: "Begin again", next: 'intro1', action: 'restart' }
         ]
@@ -1999,14 +2771,17 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
         return;
       }
 
+      // Store current scene for code layer
+      currentSceneKey = sceneId;
+
       // Play glitch transition sound
       playGlitchSound();
 
       // Track learned concepts
       if (conceptMap[sceneId] && scene.puzzle) {
-        const concept = conceptMap[sceneId];
-        if (!gameState.learnedConcepts.has(concept)) {
-          gameState.learnedConcepts.add(concept);
+        const conceptInfo = conceptMap[sceneId];
+        if (!gameState.learnedConcepts.has(conceptInfo.name)) {
+          gameState.learnedConcepts.add(conceptInfo.name);
           updateConceptTracker();
         }
       }
@@ -2037,7 +2812,10 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
       const memoryFragment = document.getElementById('memory-fragment');
 
       if (ariaText) ariaText.setAttribute('data-full', scene.aria);
-      if (sceneDesc) sceneDesc.setAttribute('data-full', scene.description);
+      
+      // Handle both description string and function
+      const descriptionText = typeof scene.getDescription === 'function' ? scene.getDescription() : scene.description;
+      if (sceneDesc) sceneDesc.setAttribute('data-full', descriptionText);
 
       if (memoryFragment) memoryFragment.style.display = 'none';
       if (puzzleArea) puzzleArea.style.display = 'none';
@@ -2054,7 +2832,7 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
         
         setTimeout(() => {
           if (sceneDesc) {
-            sceneDesc.innerHTML = scene.description;
+            sceneDesc.innerHTML = descriptionText;
             
             setTimeout(() => {
               if (scene.puzzle) {
@@ -2145,9 +2923,9 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
 
       if (!puzzleArea || !puzzlePrompt || !puzzleInput || !puzzleFeedback || !puzzleSubmit) return;
 
-      // Remove old fusion code layer
-      const oldLayer = document.getElementById('fusion-code-layer');
-      if (oldLayer) oldLayer.remove();
+      // Remove old code layers
+      const oldLayers = puzzleArea.querySelectorAll('.code-layer');
+      oldLayers.forEach(layer => layer.remove());
 
       // Store fusion info
       gameState.currentFusion = fusion;
@@ -2159,20 +2937,21 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
       puzzleFeedback.style.display = 'none';
       puzzleInput.focus();
 
-      // Show code example in code layer
+      // Always show code example
+      const codeLayer = document.createElement('div');
+      codeLayer.className = 'code-layer';
+      
+      // Get code example based on fusion or current scene concept
+      let codeKey = 'variable'; // default
       if (fusion && fusion.length > 0) {
-        // Create code layer for fusion
-        const codeLayer = document.createElement('div');
-        codeLayer.id = 'fusion-code-layer';
-        codeLayer.className = 'code-layer';
-        
-        // Get combined code example key
-        const codeKey = fusion.join('+');
-        codeLayer.innerHTML = getCodeExample(codeKey);
-        
-        puzzleArea.appendChild(codeLayer);
-        codeLayer.classList.toggle('visible', gameState.abstractionMode === 'code');
+        codeKey = fusion.join('+');
+      } else if (conceptMap[currentSceneKey]) {
+        codeKey = conceptMap[currentSceneKey].key;
       }
+      
+      codeLayer.innerHTML = getCodeExample(codeKey);
+      puzzleArea.appendChild(codeLayer);
+      codeLayer.classList.toggle('visible', gameState.abstractionMode === 'code');
 
       // Speak the puzzle
       speakAria(stripHtml(puzzle.prompt));
@@ -2184,6 +2963,9 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
         if (isCorrect) {
           playSuccessSound();
           healCorruption(10); // Heal 10% on correct answer
+          
+          // Check for memory unlocks based on progress
+          checkMemoryUnlocks(sceneId);
           
           puzzleFeedback.className = 'success';
           puzzleFeedback.innerHTML = '✓ ' + puzzle.success;
@@ -2200,9 +2982,19 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
               memoryFragment.style.display = 'block';
             }
 
-            setTimeout(() => {
-              showScene(puzzle.next);
-            }, 5000);
+            // Trigger void after certain puzzles
+            if (shouldShowVoid(sceneId)) {
+              setTimeout(() => {
+                showVoid();
+                setTimeout(() => {
+                  showScene(puzzle.next);
+                }, 3500);
+              }, 3000);
+            } else {
+              setTimeout(() => {
+                showScene(puzzle.next);
+              }, 5000);
+            }
           }, 1500);
         } else {
           playErrorSound();
@@ -2230,6 +3022,9 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
       
       // Initialize speech
       initSpeech();
+      
+      // Initialize memories UI
+      initMemories();
       
       try {
         document.getElementById('title-screen').style.display = 'none';
