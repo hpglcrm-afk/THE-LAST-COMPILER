@@ -1160,11 +1160,280 @@
       font-size: 1.5rem;
       cursor: pointer;
     }
+
+    /* ═══════════════════════════════════════
+       ACHIEVEMENTS PANEL
+    ═══════════════════════════════════════ */
+    #achievements-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    #achievements-btn:hover {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    #achievements-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #achievements-panel.visible {
+      display: block;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      color: var(--success);
+    }
+
+    .close-panel {
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .achievement-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .achievement-card {
+      background: var(--bg-light);
+      border: 1px solid var(--text-dimmer);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .achievement-card.unlocked {
+      border-color: var(--success);
+      background: rgba(0, 255, 157, 0.1);
+    }
+
+    .achievement-icon {
+      font-size: 2rem;
+    }
+
+    .achievement-info h4 {
+      color: var(--text);
+      margin-bottom: 5px;
+    }
+
+    .achievement-info p {
+      color: var(--text-dimmer);
+      font-size: 0.8rem;
+    }
+
+    /* ═══════════════════════════════════════
+       GLOSSARY PANEL
+    ═══════════════════════════════════════ */
+    #glossary-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 120px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 10px 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    #glossary-btn:hover {
+      border-color: var(--aria);
+      color: var(--aria);
+    }
+
+    #glossary-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #glossary-panel.visible {
+      display: block;
+    }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .glossary-card {
+      background: var(--bg-light);
+      border: 1px solid var(--text-dimmer);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .glossary-card h4 {
+      color: var(--aria);
+      margin-bottom: 10px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .glossary-code {
+      background: #000;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--success);
+      margin: 10px 0;
+    }
+
+    .glossary-desc {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ═══════════════════════════════════════
+       YOUR CODE PANEL (Final)
+    ═══════════════════════════════════════ */
+    #your-code-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, #0a0a15 0%, #000 100%);
+      z-index: 9999;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #your-code-panel.visible {
+      display: block;
+    }
+
+    .code-compiler {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .compiler-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      color: var(--success);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .compiler-subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      margin-bottom: 30px;
+    }
+
+    .compiled-code-block {
+      background: #0a0a0a;
+      border: 1px solid var(--success);
+      border-radius: 8px;
+      padding: 30px;
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      color: var(--success);
+      line-height: 2;
+      white-space: pre-wrap;
+    }
+
+    .compiled-code-block .comment {
+      color: var(--text-dimmer);
+    }
+
+    .compiled-code-block .keyword {
+      color: var(--corrupt);
+    }
+
+    .compiled-code-block .function {
+      color: var(--aria);
+    }
+
+    .compiled-code-block .string {
+      color: var(--danger);
+    }
+
+    /* Save indicator */
+    #save-indicator {
+      position: fixed;
+      top: 70px;
+      right: 20px;
+      background: var(--success);
+      color: var(--bg-deep);
+      padding: 5px 15px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-family: 'Fira Code', monospace;
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: 100;
+    }
+
+    #save-indicator.visible {
+      opacity: 1;
+    }
+
+    @keyframes achievementSlide {
+      from { transform: translateX(100%); opacity: 0; }
+      10% { transform: translateX(0); opacity: 1; }
+      90% { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <!-- Corruption overlay -->
   <div class="corruption-overlay" id="corruption-overlay"></div>
+
+  <!-- Save indicator -->
+  <div id="save-indicator">SAVED</div>
 
   <!-- The Void -->
   <div id="void-overlay">
@@ -1199,6 +1468,40 @@
 
   <!-- Memories Collection -->
   <div id="memories-container"></div>
+
+  <!-- Achievements Panel -->
+  <button id="achievements-btn" onclick="showAchievements()">🏆 0/13</button>
+
+  <div id="achievements-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">🏆 ACHIEVEMENTS</h2>
+      <button class="close-panel" onclick="closeAchievements()">CLOSE</button>
+    </div>
+    <div class="achievement-grid" id="achievement-grid"></div>
+  </div>
+
+  <!-- Glossary Panel -->
+  <button id="glossary-btn" onclick="showGlossary()">📖 GLOSSARY</button>
+
+  <div id="glossary-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">📖 GLOSSARY</h2>
+      <button class="close-panel" onclick="closeGlossary()">CLOSE</button>
+    </div>
+    <div class="glossary-grid" id="glossary-grid"></div>
+  </div>
+
+  <!-- Your Code Panel -->
+  <div id="your-code-panel">
+    <div class="code-compiler">
+      <h1 class="compiler-title">◈ YOUR COMPILATION ◈</h1>
+      <p class="compiler-subtitle">The code you have built through understanding...</p>
+      <pre class="compiled-code-block" id="compiled-code-display"></pre>
+      <div style="text-align: center; margin-top: 30px;">
+        <button onclick="closeYourCode()" style="background: var(--success); color: var(--bg-deep); border: none; padding: 15px 40px; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; cursor: pointer; border-radius: 4px;">Continue</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Sound toggle -->
   <button id="sound-toggle" onclick="toggleSound()">♫ ON</button>
@@ -1237,7 +1540,7 @@
         <p class="title-sub">A JOURNEY INTO COMPUTATIONAL THINKING</p>
       </div>
       <div class="title-divider"></div>
-      <button class="start-btn" onclick="startGame(); playClickSound();">Initialize System</button>
+      <button class="start-btn" id="start-btn" onclick="console.log('Button clicked'); try { startGame(); } catch(e) { console.error(e); alert('Error: ' + e.message); }">Initialize System</button>
       <p class="title-credit">developed by <span class="highlight">BhMn</span></p>
     </div>
 
@@ -1308,8 +1611,224 @@
       isInVoid: false,
       isInDream: false,
       currentMemory: null,
-      dreamSequence: 0
+      dreamSequence: 0,
+      achievements: new Set(),
+      compiledCode: [],
+      startTime: Date.now(),
+      isLoaded: false
     };
+
+    // ═══════════════════════════════════════
+    // AUTO-SAVE SYSTEM
+    // ═══════════════════════════════════════
+    const SAVE_KEY = 'lastCompiler_save';
+
+    function saveGame() {
+      try {
+        const saveData = {
+          currentScene: gameState.currentScene,
+          visitedScenes: Array.from(gameState.visitedScenes),
+          playerName: gameState.playerName,
+          soundEnabled: gameState.soundEnabled,
+          learnedConcepts: Array.from(gameState.learnedConcepts),
+          corruption: gameState.corruption,
+          memoriesCollected: Array.from(gameState.memoriesCollected),
+          achievements: Array.from(gameState.achievements),
+          compiledCode: gameState.compiledCode,
+          startTime: gameState.startTime,
+          savedAt: Date.now()
+        };
+        localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+        console.log('Game saved');
+      } catch (e) {
+        console.log('Save failed:', e);
+      }
+    }
+
+    function loadGame() {
+      try {
+        const saved = localStorage.getItem(SAVE_KEY);
+        if (saved) {
+          const data = JSON.parse(saved);
+          
+          gameState.currentScene = data.currentScene || 0;
+          gameState.visitedScenes = new Set(data.visitedScenes || []);
+          gameState.playerName = data.playerName || '';
+          gameState.soundEnabled = data.soundEnabled !== false;
+          gameState.learnedConcepts = new Set(data.learnedConcepts || []);
+          gameState.corruption = data.corruption || 0;
+          gameState.memoriesCollected = new Set(data.memoriesCollected || []);
+          gameState.achievements = new Set(data.achievements || []);
+          gameState.compiledCode = data.compiledCode || [];
+          gameState.startTime = data.startTime || Date.now();
+          gameState.isLoaded = true;
+          
+          console.log('Game loaded');
+          return true;
+        }
+      } catch (e) {
+        console.log('Load failed:', e);
+      }
+      return false;
+    }
+
+    function hasSavedGame() {
+      return localStorage.getItem(SAVE_KEY) !== null;
+    }
+
+    function clearSave() {
+      localStorage.removeItem(SAVE_KEY);
+    }
+
+    // ═══════════════════════════════════════
+    // ACHIEVEMENTS
+    // ═══════════════════════════════════════
+    const achievementsData = {
+      'first_step': { name: 'First Step', desc: 'Complete your first puzzle', icon: '👣' },
+      'variable_master': { name: 'Variable Master', desc: 'Master variables', icon: '📦' },
+      'loop_master': { name: 'Loop Master', desc: 'Master loops', icon: '🔄' },
+      'conditional_master': { name: 'Decision Maker', desc: 'Master conditionals', icon: '🔀' },
+      'function_master': { name: 'Function Caster', desc: 'Master functions', icon: '✨' },
+      'array_master': { name: 'Librarian', desc: 'Master arrays', icon: '📚' },
+      'object_master': { name: 'Architect', desc: 'Master objects', icon: '🏗️' },
+      'recursion_master': { name: 'Infinite Mind', desc: 'Master recursion', icon: '🔮' },
+      'fusion_complete': { name: 'Pattern Synthesizer', desc: 'Complete all fusion puzzles', icon: '⚡' },
+      'memory_collector': { name: 'Memory Keeper', desc: 'Collect all memories', icon: '💎' },
+      'pure_heart': { name: 'Pure Heart', desc: 'Finish with 0% corruption', icon: '💚' },
+      'survivor': { name: 'Survivor', desc: 'Finish with any corruption', icon: '🏅' },
+      'compiler': { name: 'The Compiler', desc: 'Complete the game', icon: '🎯' }
+    };
+
+    function unlockAchievement(id) {
+      if (gameState.achievements.has(id)) return;
+      
+      gameState.achievements.add(id);
+      saveGame();
+      
+      // Show notification
+      const achievement = achievementsData[id];
+      showAchievementNotification(achievement);
+    }
+
+    function showAchievementNotification(achievement) {
+      const notif = document.createElement('div');
+      notif.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background: linear-gradient(135deg, var(--success), #00aa55);
+        color: var(--bg-deep);
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 600;
+        z-index: 10000;
+        animation: achievementSlide 3s ease forwards;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      `;
+      notif.innerHTML = `
+        <span style="font-size: 2rem;">${achievement.icon}</span>
+        <div>
+          <div style="font-size: 0.8rem; opacity: 0.8;">ACHIEVEMENT</div>
+          <div style="font-size: 1.1rem;">${achievement.name}</div>
+        </div>
+      `;
+      document.body.appendChild(notif);
+      
+      setTimeout(() => notif.remove(), 3000);
+    }
+
+    // ═══════════════════════════════════════
+    // GLOSSARY
+    // ═══════════════════════════════════════
+    const glossaryData = {
+      'Variable': {
+        code: 'let name = "value";',
+        desc: 'A named container that holds data. Like a labeled box where you store information.',
+        example: 'let score = 0; lets you store and change a score throughout your program.'
+      },
+      'Loop': {
+        code: 'for (let i = 0; i < 5; i++) { }',
+        desc: 'Repeats code multiple times. Like running around a track - you repeat the same path.',
+        example: 'for (let i = 0; i < 10; i++) { print(i) } prints 0 through 9.'
+      },
+      'Conditional': {
+        code: 'if (condition) { } else { }',
+        desc: 'Makes decisions based on true/false. Like a fork in the road.',
+        example: 'if (score > 10) { win() } else { tryAgain() }'
+      },
+      'Boolean': {
+        code: 'true / false',
+        desc: 'The simplest data type - only two values: true or false.',
+        example: 'let isPlaying = true; - a switch that is on or off.'
+      },
+      'Function': {
+        code: 'function add(a, b) { return a + b; }',
+        desc: 'A reusable block of code that does a specific task. Like a spell with a name.',
+        example: 'function greet(name) { return "Hello " + name; }'
+      },
+      'Parameter': {
+        code: 'function fn(param) { }',
+        desc: 'Input that a function receives. The question the function asks before working.',
+        example: 'In add(2, 3), the parameters are 2 and 3.'
+      },
+      'Array': {
+        code: 'let arr = [a, b, c];',
+        desc: 'An ordered list of items. Like a row of numbered boxes.',
+        example: 'let colors = ["red", "green", "blue"]; colors[0] is "red".'
+      },
+      'Object': {
+        code: 'let obj = { key: value };',
+        desc: 'Related data grouped together. Like a person with name, age, etc.',
+        example: 'let player = { name: "Kai", level: 5 };'
+      },
+      'Recursion': {
+        code: 'function fn() { return fn(); }',
+        desc: 'A function that calls itself. Like a mirror facing a mirror.',
+        example: 'countdown(3) calls countdown(2) which calls countdown(1)...'
+      },
+      'Algorithm': {
+        code: '// Step by step instructions',
+        desc: 'A recipe - step by step instructions to solve a problem.',
+        example: 'Bubble sort: compare pairs and swap if needed, repeat.'
+      },
+      'Complexity': {
+        code: 'O(n), O(1), O(n²)',
+        desc: 'How fast an algorithm grows with input. Big-O notation.',
+        example: 'O(1) is instant, O(n²) gets very slow with large data.'
+      }
+    };
+
+    // ═══════════════════════════════════════
+    // COMPILED CODE (Your Code Builds)
+    // ═══════════════════════════════════════
+    const compiledCodeTemplates = {
+      'variable': 'let understanding = "growing";',
+      'assignment': 'understanding = 42;',
+      'loop': 'for (let i = 0; i < infinity; i++) { learn(); }',
+      'infinite': 'while (true) { // beware the infinite }',
+      'conditional': 'if (curious) { explore(); } else { stop(); }',
+      'boolean': 'let isAlive = true;',
+      'function': 'function dream(knowledge) { return wisdom(knowledge); }',
+      'parameters': 'function transform(input, process) { }',
+      'scope': 'let local = "inside only"; // global outside',
+      'array': 'let memories = ["first", "second", "third"];',
+      'iteration': 'memories.forEach(m => remember(m));',
+      'object': 'let aria = { name: "ARIA", heart: "pure" };',
+      'recursion': 'function understand(depth) { return understand(depth - 1); }',
+      'algorithm': 'function solve(problem) { return solution; }',
+      'complexity': '// Choose O(1) over O(n²) when possible'
+    };
+
+    function addCompiledCode(sceneId) {
+      const codeKey = sceneId.replace('_intro', '').replace('_knowledge', '').replace('_mystery', '');
+      if (compiledCodeTemplates[codeKey] && !gameState.compiledCode.includes(compiledCodeTemplates[codeKey])) {
+        gameState.compiledCode.push(compiledCodeTemplates[codeKey]);
+        saveGame();
+      }
+    }
 
     // ═══════════════════════════════════════
     // ARIA'S LOST MEMORIES
@@ -2063,8 +2582,8 @@
       dreamDesc.innerHTML = dream.description;
       
       // Add floating symbols
-      const symbols = ['{ }', '( )', '[ ]', '< >', '=>', '==', '&&', '||', '!', '?let i = 0; i '];
-      for (< 15; i++) {
+      const symbols = ['{ }', '( )', '[ ]', '< >', '=>', '==', '&&', '||', '!', '?'];
+      for (let i = 0; i < 15; i++) {
         const floating = document.createElement('div');
         floating.className = 'dream-floating';
         floating.textContent = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2190,6 +2709,153 @@
       
       // Show notification
       speakAria('A memory fragment... I remember now...');
+    }
+
+    // ═══════════════════════════════════════
+    // GLOSSARY FUNCTIONS
+    // ═══════════════════════════════════════
+    function showGlossary() {
+      const panel = document.getElementById('glossary-panel');
+      const grid = document.getElementById('glossary-grid');
+      
+      grid.innerHTML = '';
+      
+      Object.keys(glossaryData).forEach(key => {
+        const item = glossaryData[key];
+        const card = document.createElement('div');
+        card.className = 'glossary-card';
+        card.innerHTML = `
+          <h4>${key}</h4>
+          <div class="glossary-code">${item.code}</div>
+          <p class="glossary-desc">${item.desc}</p>
+          <p class="glossary-desc" style="margin-top: 10px; font-style: italic;">${item.example}</p>
+        `;
+        grid.appendChild(card);
+      });
+      
+      panel.classList.add('visible');
+    }
+
+    function closeGlossary() {
+      document.getElementById('glossary-panel').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // ACHIEVEMENTS FUNCTIONS
+    // ═══════════════════════════════════════
+    function showAchievements() {
+      const panel = document.getElementById('achievements-panel');
+      const grid = document.getElementById('achievement-grid');
+      
+      grid.innerHTML = '';
+      
+      Object.keys(achievementsData).forEach(id => {
+        const ach = achievementsData[id];
+        const unlocked = gameState.achievements.has(id);
+        
+        const card = document.createElement('div');
+        card.className = 'achievement-card ' + (unlocked ? 'unlocked' : '');
+        card.innerHTML = `
+          <span class="achievement-icon">${unlocked ? ach.icon : '🔒'}</span>
+          <div class="achievement-info">
+            <h4>${unlocked ? ach.name : '???'}</h4>
+            <p>${unlocked ? ach.desc : 'Complete to unlock'}</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      
+      // Update button
+      document.getElementById('achievements-btn').textContent = '🏆 ' + gameState.achievements.size + '/' + Object.keys(achievementsData).length;
+      
+      panel.classList.add('visible');
+    }
+
+    function closeAchievements() {
+      document.getElementById('achievements-panel').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // YOUR CODE (COMPILATION)
+    // ═══════════════════════════════════════
+    function showYourCode() {
+      const panel = document.getElementById('your-code-panel');
+      const display = document.getElementById('compiled-code-display');
+      
+      let code = '// ═══════════════════════════════════════\n';
+      code += '// THE LAST COMPILER - YOUR CODE\n';
+      code += '// Compiled through understanding\n';
+      code += '// ═══════════════════════════════════════\n\n';
+      
+      code += '// Chapter I: The Beginning\n';
+      code += '<span class="comment">// Where it all started</span>\n';
+      code += gameState.compiledCode.slice(0, 2).join('\n') || '// Your journey begins...';
+      code += '\n\n';
+      
+      code += '// Chapter II: Patterns\n';
+      code += '<span class="comment">// Learning to repeat</span>\n';
+      code += gameState.compiledCode.slice(2, 5).join('\n') || '';
+      code += '\n\n';
+      
+      code += '// Chapter III: Decisions\n';
+      code += '<span class="comment">// Choices shape reality</span>\n';
+      code += gameState.compiledCode.slice(5, 8).join('\n') || '';
+      code += '\n\n';
+      
+      code += '// Chapter IV: Abstractions\n';
+      code += '<span class="comment">// Building blocks of thought</span>\n';
+      code += gameState.compiledCode.slice(8, 12).join('\n') || '';
+      code += '\n\n';
+      
+      code += '// Chapter V: Data\n';
+      code += '<span class="comment">// Organizing information</span>\n';
+      code += gameState.compiledCode.slice(12, 16).join('\n') || '';
+      code += '\n\n';
+      
+      code += '// Final Chapter: Understanding\n';
+      code += '<span class="comment">// The compilation is complete</span>\n';
+      code += '<span class="keyword">function</span> <span class="function">main</span>() {\n';
+      code += '  <span class="keyword">return</span> <span class="string">"The Compiler"</span>;\n';
+      code += '}\n';
+      code += '\n';
+      code += '<span class="comment">// You are now a compiler</span>\n';
+      code += '<span class="keyword">const</span> result = <span class="function">main</span>();\n';
+      
+      display.innerHTML = code;
+      panel.classList.add('visible');
+    }
+
+    function closeYourCode() {
+      document.getElementById('your-code-panel').classList.remove('visible');
+    }
+
+    function checkAchievements() {
+      // First step
+      if (gameState.currentScene >= 3) unlockAchievement('first_step');
+      
+      // Concept masters
+      if (gameState.learnedConcepts.has('Variables')) unlockAchievement('variable_master');
+      if (gameState.learnedConcepts.has('Loops')) unlockAchievement('loop_master');
+      if (gameState.learnedConcepts.has('Conditionals')) unlockAchievement('conditional_master');
+      if (gameState.learnedConcepts.has('Functions')) unlockAchievement('function_master');
+      if (gameState.learnedConcepts.has('Arrays')) unlockAchievement('array_master');
+      if (gameState.learnedConcepts.has('Objects')) unlockAchievement('object_master');
+      if (gameState.learnedConcepts.has('Recursion')) unlockAchievement('recursion_master');
+      
+      // Fusion complete
+      if (gameState.visitedScenes.has('fusion_recursion_conditional')) unlockAchievement('fusion_complete');
+      
+      // Memory collector
+      if (gameState.memoriesCollected.size >= 6) unlockAchievement('memory_collector');
+      
+      // Update button
+      document.getElementById('achievements-btn').textContent = '🏆 ' + gameState.achievements.size + '/' + Object.keys(achievementsData).length;
+    }
+
+    function showSaveIndicator() {
+      const indicator = document.getElementById('save-indicator');
+      indicator.classList.add('visible');
+      setTimeout(() => indicator.classList.remove('visible'), 2000);
     }
 
     function getCodeExample(concept) {
@@ -2711,6 +3377,7 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
           }
         },
         choices: [
+          { text: "See Your Code", next: 'final', action: 'showcode' },
           { text: "Begin again", next: 'intro1', action: 'restart' }
         ]
       }
@@ -2720,6 +3387,46 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
     // HELPER FUNCTIONS
     // ═══════════════════════════════════════
     let typeTimer = null;
+
+    // Override showChoices to handle special actions
+    const originalShowChoices = showChoices;
+    showChoices = function(choices) {
+      const choicesDiv = document.getElementById('choices');
+      if (!choicesDiv) return;
+      
+      choicesDiv.innerHTML = '';
+
+      choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = choice.text;
+        btn.style.animationDelay = (index * 0.1) + 's';
+        
+        // Add sound on hover
+        btn.onmouseenter = () => {
+          try { playHoverSound(); } catch(e) {}
+        };
+        
+        btn.onclick = () => {
+          try { playClickSound(); } catch(e) {}
+          
+          if (choice.action === 'restart') {
+            clearSave();
+            location.reload();
+          } else if (choice.action === 'showcode') {
+            // Final achievements
+            unlockAchievement('compiler');
+            if (gameState.corruption === 0) unlockAchievement('pure_heart');
+            unlockAchievement('survivor');
+            saveGame();
+            showYourCode();
+          } else {
+            showScene(choice.next);
+          }
+        };
+        choicesDiv.appendChild(btn);
+      });
+    };
 
     function typeText(element, html, speed = 15, callback) {
       if (typeTimer) clearInterval(typeTimer);
@@ -2762,20 +3469,28 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
     }
 
     function showScene(sceneId) {
-      skipTyping();
-      stopSpeech();
+      try {
+        skipTyping();
+      } catch(e) { console.log('skipTyping error:', e); }
+      
+      try {
+        stopSpeech();
+      } catch(e) { console.log('stopSpeech error:', e); }
       
       const scene = scenes.find(s => s.id === sceneId);
       if (!scene) {
         console.error('Scene not found:', sceneId);
+        alert('Scene not found: ' + sceneId);
         return;
       }
 
       // Store current scene for code layer
       currentSceneKey = sceneId;
 
-      // Play glitch transition sound
-      playGlitchSound();
+      // Try to play glitch sound (don't fail if audio not ready)
+      try {
+        playGlitchSound();
+      } catch(e) {}
 
       // Track learned concepts
       if (conceptMap[sceneId] && scene.puzzle) {
@@ -2967,6 +3682,16 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
           // Check for memory unlocks based on progress
           checkMemoryUnlocks(sceneId);
           
+          // Add compiled code
+          addCompiledCode(sceneId);
+          
+          // Check achievements
+          checkAchievements();
+          
+          // Auto-save
+          saveGame();
+          showSaveIndicator();
+          
           puzzleFeedback.className = 'success';
           puzzleFeedback.innerHTML = '✓ ' + puzzle.success;
           puzzleFeedback.style.display = 'block';
@@ -3014,31 +3739,59 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
     function startGame() {
       console.log('Starting game...');
       
-      // Test and initialize audio
-      testAudio();
-      setTimeout(() => {
-        initAudio();
-      }, 100);
+      // Try to load saved game
+      const wasLoaded = loadGame();
       
-      // Initialize speech
-      initSpeech();
+      // Hide title screen immediately
+      var titleScreen = document.getElementById('title-screen');
+      var gameScreen = document.getElementById('game-screen');
+      
+      if (!titleScreen || !gameScreen) {
+        console.error('Could not find screen elements');
+        alert('Error: Cannot find game elements');
+        return;
+      }
+      
+      titleScreen.style.display = 'none';
+      gameScreen.style.display = 'block';
+      
+      // Show credits
+      var credits = document.getElementById('credits');
+      if (credits) credits.classList.add('visible');
       
       // Initialize memories UI
-      initMemories();
+      if (typeof initMemories === 'function') {
+        initMemories();
+      }
+      
+      // Update corruption bar
+      updateCorruption();
+      
+      // Update achievements button
+      document.getElementById('achievements-btn').textContent = '🏆 ' + gameState.achievements.size + '/' + Object.keys(achievementsData).length;
+      
+      // Try to initialize audio (won't fail)
+      try {
+        if (typeof testAudio === 'function') testAudio();
+      } catch(e) { console.log('testAudio error:', e); }
+      
+      setTimeout(function() {
+        try {
+          if (typeof initAudio === 'function') initAudio();
+        } catch(e) { console.log('initAudio error:', e); }
+      }, 100);
       
       try {
-        document.getElementById('title-screen').style.display = 'none';
-        document.getElementById('game-screen').style.display = 'block';
-        
-        // Show credits
-        const credits = document.getElementById('credits');
-        if (credits) credits.classList.add('visible');
-        
+        if (typeof initSpeech === 'function') initSpeech();
+      } catch(e) { console.log('initSpeech error:', e); }
+      
+      // Start the first scene
+      try {
         showScene('intro1');
         console.log('Game started successfully');
       } catch (e) {
-        console.error('Error starting game:', e);
-        alert('Error: ' + e.message);
+        console.error('Error showing first scene:', e);
+        alert('Error showing scene: ' + e.message);
       }
     }
 
