@@ -192,21 +192,6 @@
       font-size: 1.2rem;
     }
 
-    .title-controls {
-      margin-top: 20px;
-      color: var(--text-dimmer);
-      font-size: 0.75rem;
-      font-family: 'Fira Code', monospace;
-    }
-
-    .title-controls kbd {
-      background: var(--bg-light);
-      padding: 3px 8px;
-      border-radius: 3px;
-      border: 1px solid var(--text-dimmer);
-      margin: 0 3px;
-    }
-
     .title-credit {
       margin-top: 50px;
       font-family: 'Fira Code', monospace;
@@ -1762,10 +1747,6 @@
       </div>
       
       <button class="start-btn" id="start-btn" onclick="console.log('Button clicked'); try { startGame(); } catch(e) { console.error(e); alert('Error: ' + e.message); }">Initialize System</button>
-      
-      <div class="title-controls">
-        <kbd>G</kbd> Glossary &nbsp; <kbd>A</kbd> Achievements &nbsp; <kbd>S</kbd> Story/Code &nbsp; <kbd>ESC</kbd> Close
-      </div>
       
       <p class="title-credit">developed by <span class="highlight">BhMn</span></p>
     </div>
