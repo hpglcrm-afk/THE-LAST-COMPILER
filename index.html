@@ -675,12 +675,28 @@
       transition: all 0.3s;
     }
 
-    #sound-toggle:hover {
+    #voice-toggle {
+      position: fixed;
+      top: 20px;
+      left: 80px;
+      background: transparent;
+      border: 1px solid var(--text-dimmer);
+      color: var(--text-dimmer);
+      padding: 8px 12px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      border-radius: 3px;
+      z-index: 100;
+      transition: all 0.3s;
+    }
+
+    #sound-toggle:hover, #voice-toggle:hover {
       border-color: var(--aria);
       color: var(--aria);
     }
 
-    #sound-toggle.muted {
+    #sound-toggle.muted, #voice-toggle.muted {
       opacity: 0.5;
     }
 
@@ -702,6 +718,7 @@
 <body>
   <!-- Sound toggle -->
   <button id="sound-toggle" onclick="toggleSound()">♫ ON</button>
+  <button id="voice-toggle" onclick="toggleVoice()">🎤 ON</button>
 
   <!-- Floating particles -->
   <div class="particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
@@ -725,7 +742,7 @@
         <p class="title-sub">A JOURNEY INTO COMPUTATIONAL THINKING</p>
       </div>
       <div class="title-divider"></div>
-      <button class="start-btn" onclick="startGame()">Initialize System</button>
+      <button class="start-btn" onclick="startGame(); playClickSound();">Initialize System</button>
       <p class="title-credit">developed by <span class="highlight">BhMn</span></p>
     </div>
 
@@ -809,6 +826,400 @@
       'algorithm_intro': 'Algorithms',
       'complexity_intro': 'Algorithms'
     };
+
+    // Voice toggle
+    let voiceEnabled = true;
+
+    // ═══════════════════════════════════════
+    // AUDIO ENGINE (Web Audio API)
+    // ═══════════════════════════════════════
+    let audioCtx = null;
+    let masterGain = null;
+    let ambientOsc = null;
+    let ambientGain = null;
+    let noiseNode = null;
+    let isAudioInitialized = false;
+
+    function testAudio() {
+      console.log('Testing audio...');
+      try {
+        const testCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = testCtx.createOscillator();
+        const gain = testCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(testCtx.destination);
+        
+        osc.frequency.value = 440;
+        gain.gain.value = 0.3;
+        
+        osc.start();
+        osc.stop(testCtx.currentTime + 0.3);
+        
+        console.log('Audio test: OK');
+        return true;
+      } catch (e) {
+        console.error('Audio test failed:', e);
+        return false;
+      }
+    }
+
+    function initAudio() {
+      if (isAudioInitialized) return;
+      
+      try {
+        console.log('Initializing audio...');
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Resume context if suspended
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume().then(() => {
+            console.log('Audio context resumed');
+          });
+        }
+        
+        masterGain = audioCtx.createGain();
+        masterGain.gain.value = 0.4;
+        masterGain.connect(audioCtx.destination);
+        
+        // Create ambient drone
+        createAmbientDrone();
+        
+        // Create noise layer
+        createNoiseLayer();
+        
+        isAudioInitialized = true;
+        console.log('Audio initialized successfully');
+      } catch (e) {
+        console.warn('Audio not supported:', e);
+      }
+    }
+
+    function createAmbientDrone() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        ambientOsc = audioCtx.createOscillator();
+        ambientGain = audioCtx.createGain();
+        
+        // Low drone
+        ambientOsc.type = 'sine';
+        ambientOsc.frequency.value = 55;
+        
+        ambientGain.gain.value = 0;
+        ambientOsc.connect(ambientGain);
+        ambientGain.connect(masterGain);
+        
+        ambientOsc.start();
+        
+        // Fade in
+        if (gameState.soundEnabled) {
+          ambientGain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 2);
+        }
+        
+        console.log('Ambient drone created');
+      } catch (e) {
+        console.warn('Ambient drone error:', e);
+      }
+    }
+
+    function createNoiseLayer() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        
+        noiseNode = audioCtx.createBufferSource();
+        noiseNode.buffer = buffer;
+        noiseNode.loop = true;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 200;
+        
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.value = 0;
+        
+        noiseNode.connect(filter);
+        filter.connect(noiseGain);
+        noiseGain.connect(masterGain);
+        
+        noiseNode.start();
+        
+        // Fade in
+        if (gameState.soundEnabled) {
+          noiseGain.gain.linearRampToValueAtTime(0.02, audioCtx.currentTime + 2);
+        }
+        
+        console.log('Noise layer created');
+      } catch (e) {
+        console.warn('Noise layer error:', e);
+      }
+    }
+
+    function playTypingSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = 800 + Math.random() * 400;
+        gain.gain.value = 0.02;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playSuccessSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const notes = [523.25, 659.25, 783.99];
+        
+        notes.forEach((freq, i) => {
+          setTimeout(() => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            gain.gain.value = 0.2;
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+            
+            osc.connect(gain);
+            gain.connect(masterGain);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.5);
+          }, i * 100);
+        });
+      } catch (e) {}
+    }
+
+    function playErrorSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.value = 150;
+        gain.gain.value = 0.1;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.2);
+      } catch (e) {}
+    }
+
+    function playGlitchSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'square';
+        osc.frequency.value = 100;
+        osc.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.1);
+        gain.gain.value = 0.08;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    function playHoverSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = 600;
+        gain.gain.value = 0.02;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.03);
+      } catch (e) {}
+    }
+
+    function playClickSound() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'square';
+        osc.frequency.value = 300;
+        gain.gain.value = 0.05;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch (e) {}
+    }
+
+    function playAmbientPulse() {
+      if (!audioCtx || !gameState.soundEnabled) return;
+      
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.value = 110;
+        gain.gain.value = 0.05;
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+        
+        osc.connect(gain);
+        gain.connect(masterGain);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 2);
+      } catch (e) {}
+    }
+
+    // ═══════════════════════════════════════
+    // ARIA VOICE (Web Speech API)
+    // ═══════════════════════════════════════
+    let speechSynth = null;
+
+    function initSpeech() {
+      if ('speechSynthesis' in window) {
+        speechSynth = window.speechSynthesis;
+        console.log('Speech synthesis available');
+        
+        // Load voices (some browsers need this)
+        speechSynth.getVoices();
+      } else {
+        console.warn('Speech synthesis not supported');
+      }
+    }
+
+    function speakAria(text, callback) {
+      if (!speechSynth || !gameState.soundEnabled || !voiceEnabled) {
+        if (callback) callback();
+        return;
+      }
+      
+      // Cancel any ongoing speech
+      speechSynth.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      utterance.pitch = 0.8;
+      utterance.volume = 0.5;
+      
+      // Try to find a good voice
+      const voices = speechSynth.getVoices();
+      const preferredVoice = voices.find(v => 
+        v.name.includes('Female') || 
+        v.name.includes('Samantha') || 
+        v.name.includes('Google UK Female')
+      );
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+      
+      utterance.onend = () => {
+        if (callback) callback();
+      };
+      
+      utterance.onerror = () => {
+        if (callback) callback();
+      };
+      
+      speechSynth.speak(utterance);
+    }
+
+    function stripHtml(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || '';
+    }
+
+    function stopSpeech() {
+      if (speechSynth) {
+        speechSynth.cancel();
+      }
+    }
+
+    function toggleSound() {
+      gameState.soundEnabled = !gameState.soundEnabled;
+      
+      const btn = document.getElementById('sound-toggle');
+      if (btn) {
+        btn.textContent = gameState.soundEnabled ? '♫ ON' : '♪ OFF';
+        btn.classList.toggle('muted', !gameState.soundEnabled);
+      }
+      
+      // Adjust ambient volume
+      if (ambientGain && audioCtx) {
+        if (gameState.soundEnabled) {
+          ambientGain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.5);
+        } else {
+          ambientGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        }
+      }
+      
+      // Stop any ongoing speech
+      stopSpeech();
+    }
+
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      
+      const btn = document.getElementById('voice-toggle');
+      if (btn) {
+        btn.textContent = voiceEnabled ? '🎤 ON' : '🎤 OFF';
+        btn.classList.toggle('muted', !voiceEnabled);
+      }
+      
+      // Stop any ongoing speech
+      stopSpeech();
+    }
+
+    function updateConceptTracker() {
+      const dots = document.querySelectorAll('.concept-dot');
+      const conceptNames = ['Variables', 'Loops', 'Conditionals', 'Functions', 'Arrays', 'Objects', 'Recursion', 'Algorithms'];
+      
+      dots.forEach((dot, index) => {
+        if (gameState.learnedConcepts.has(conceptNames[index])) {
+          dot.classList.add('learned');
+        }
+      });
+    }
 
     // ═══════════════════════════════════════
     // ARIA'S NARRATIVE POETRY
@@ -1201,12 +1612,16 @@
 
     function showScene(sceneId) {
       skipTyping();
+      stopSpeech();
       
       const scene = scenes.find(s => s.id === sceneId);
       if (!scene) {
         console.error('Scene not found:', sceneId);
         return;
       }
+
+      // Play glitch transition sound
+      playGlitchSound();
 
       // Track learned concepts
       if (conceptMap[sceneId] && scene.puzzle) {
@@ -1255,6 +1670,9 @@
       if (ariaText) {
         ariaText.innerHTML = scene.aria;
         
+        // Speak ARIA's dialogue
+        speakAria(stripHtml(scene.aria));
+        
         setTimeout(() => {
           if (sceneDesc) {
             sceneDesc.innerHTML = scene.description;
@@ -1298,7 +1716,9 @@
         skipBtn.id = 'skip-btn';
         skipBtn.innerHTML = '[ skip ]';
         skipBtn.onclick = () => {
+          playClickSound();
           skipTyping();
+          stopSpeech();
           skipBtn.style.display = 'none';
         };
         document.body.appendChild(skipBtn);
@@ -1317,7 +1737,14 @@
         btn.className = 'choice-btn';
         btn.innerHTML = choice.text;
         btn.style.animationDelay = (index * 0.1) + 's';
+        
+        // Add sound on hover
+        btn.onmouseenter = () => {
+          playHoverSound();
+        };
+        
         btn.onclick = () => {
+          playClickSound();
           console.log('Choice clicked:', choice.text, '->', choice.next);
           if (choice.action === 'restart') {
             location.reload();
@@ -1345,14 +1772,21 @@
       puzzleFeedback.style.display = 'none';
       puzzleInput.focus();
 
+      // Speak the puzzle
+      speakAria(stripHtml(puzzle.prompt));
+
       puzzleSubmit.onclick = () => {
         const input = puzzleInput.value;
         const isCorrect = puzzle.answer(input);
 
         if (isCorrect) {
+          playSuccessSound();
           puzzleFeedback.className = 'success';
           puzzleFeedback.innerHTML = '✓ ' + puzzle.success;
           puzzleFeedback.style.display = 'block';
+          
+          // Speak success message
+          speakAria(stripHtml(puzzle.success));
 
           setTimeout(() => {
             const memoryFragment = document.getElementById('memory-fragment');
@@ -1367,6 +1801,7 @@
             }, 5000);
           }, 1500);
         } else {
+          playErrorSound();
           puzzleFeedback.className = 'error';
           puzzleFeedback.innerHTML = '✗ Not quite. Consider what the pattern is asking...';
           puzzleFeedback.style.display = 'block';
@@ -1380,6 +1815,16 @@
 
     function startGame() {
       console.log('Starting game...');
+      
+      // Test and initialize audio
+      testAudio();
+      setTimeout(() => {
+        initAudio();
+      }, 100);
+      
+      // Initialize speech
+      initSpeech();
+      
       try {
         document.getElementById('title-screen').style.display = 'none';
         document.getElementById('game-screen').style.display = 'block';
