@@ -1551,6 +1551,496 @@
       display: block;
     }
 
+    /* ═══════════════════════════════════════
+       DEEP LEARN PANEL
+    ═══════════════════════════════════════ */
+    #deeplearn-btn {
+      position: fixed;
+      bottom: 60px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--aria), #0088aa);
+      color: var(--bg-deep);
+      border: none;
+      padding: 12px 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    #deeplearn-btn:hover {
+      box-shadow: 0 0 20px var(--aria);
+    }
+
+    #deeplearn-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 5, 20, 0.98);
+      z-index: 9999;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #deeplearn-panel.visible {
+      display: block;
+      animation: panelFadeIn 0.3s ease;
+    }
+
+    .concept-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+    }
+
+    .concept-node {
+      background: linear-gradient(135deg, rgba(0,247,255,0.2) 0%, rgba(0,50,80,0.3) 100%);
+      border: 2px solid var(--aria);
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .concept-node:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px var(--aria);
+    }
+
+    .concept-node.connected {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(0,255,157,0.3);
+    }
+
+    .concept-node-icon {
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
+
+    .concept-node-name {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem;
+      color: var(--text);
+    }
+
+    .concept-connector {
+      position: absolute;
+      height: 2px;
+      background: var(--text-dimmer);
+      transform-origin: left center;
+    }
+
+    .deep-dive-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .dive-section {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--text-dimmer);
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+
+    .dive-section h3 {
+      color: var(--aria);
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 15px;
+    }
+
+    .dive-section p {
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .dive-example {
+      background: #0a0a15;
+      border-left: 3px solid var(--success);
+      padding: 15px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: var(--success);
+      margin: 15px 0;
+    }
+
+    .dive-why {
+      background: rgba(0,247,255,0.1);
+      border: 1px solid var(--aria);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 15px;
+    }
+
+    .dive-why strong {
+      color: var(--aria);
+    }
+
+    /* Computational Thinking Content Styles */
+    .concept-header {
+      background: linear-gradient(135deg, rgba(0,247,255,0.15), rgba(138,43,226,0.15));
+      border-color: var(--aria);
+      text-align: center;
+    }
+
+    .concept-header h3 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+      color: var(--aria);
+    }
+
+    .subtitle {
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+
+    .ct-badge {
+      background: linear-gradient(90deg, #00d4ff, #8a2be2);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .problem-text {
+      font-size: 1.1rem;
+      color: var(--text);
+      line-height: 1.8;
+    }
+
+    .pattern-text {
+      font-size: 1.05rem;
+      color: var(--text);
+      background: rgba(138,43,226,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #8a2be2;
+    }
+
+    .process-list {
+      background: rgba(0,247,255,0.08);
+      padding: 20px 40px;
+      border-radius: 10px;
+    }
+
+    .process-list li {
+      color: var(--text);
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .transfer-text {
+      font-size: 1.05rem;
+      color: var(--success);
+      background: rgba(0,255,127,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--success);
+    }
+
+    .thought-section {
+      background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,165,0,0.08));
+      border-color: #FFD700;
+    }
+
+    .thought-prompt {
+      font-size: 1.1rem;
+      color: var(--text);
+      margin-bottom: 15px;
+    }
+
+    .thought-box {
+      background: rgba(255,215,0,0.1);
+      border-left: 3px solid #FFD700;
+      padding: 15px 20px;
+      margin-top: 15px;
+    }
+
+    .thought-reflection {
+      color: #FFD700;
+      font-style: italic;
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .system-thinking {
+      background: linear-gradient(135deg, rgba(0,247,255,0.1), rgba(255,69,0,0.1));
+      border-color: var(--corruption);
+    }
+
+    .system-thinking h3 {
+      color: var(--corruption);
+    }
+
+    /* 4 Pillars section */
+    .pillar {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--text-dimmer);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .pillar h4 {
+      color: var(--aria);
+      margin-bottom: 8px;
+    }
+
+    .pillar p {
+      color: var(--text-dimmer);
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    /* Deep dive content scroll */
+    .deep-dive-content {
+      max-height: 70vh;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .deep-dive-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .deep-dive-content::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.3);
+      border-radius: 4px;
+    }
+
+    .deep-dive-content::-webkit-scrollbar-thumb {
+      background: var(--text-dimmer);
+      border-radius: 4px;
+    }
+
+    /* Connection diagram */
+    .connection-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .connection-line {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .connection-arrow {
+      color: var(--text-dimmer);
+      font-size: 1.5rem;
+    }
+
+    .connection-box {
+      background: rgba(0,247,255,0.1);
+      border: 1px solid var(--aria);
+      padding: 15px 25px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .connection-box h4 {
+      color: var(--aria);
+      margin: 0 0 5px 0;
+      font-size: 1rem;
+    }
+
+    .connection-box p {
+      color: var(--text-dimmer);
+      margin: 0;
+      font-size: 0.85rem;
+    }
+
+    /* Remove old unused code-related styles */
+    .eli5-text, .mental-model, .misconception, 
+    .code-example, .exercise-section, .exercise-prompt,
+    .hint-btn, .hint-content, .hint-text, .exercise-input,
+    .check-btn, .exercise-result, .result-output,
+    .chapter-badge, .feynman-steps {
+      display: none;
+    }
+
+    /* Deep Learn Panel scrollable */
+    #deeplearn-content {
+      color: var(--bg-deep);
+      border: none;
+      padding: 10px 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .check-btn:hover {
+      background: #00ff7f;
+      transform: scale(1.02);
+    }
+
+    .exercise-result {
+      margin-top: 15px;
+      font-size: 1rem;
+    }
+
+    .exercise-result .success {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .exercise-result .error {
+      color: var(--corruption);
+    }
+
+    .result-output {
+      background: #0a0a12;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: 'Fira Code', monospace;
+      color: var(--success);
+      margin-top: 10px;
+    }
+
+    .feynman-steps {
+      background: rgba(0,247,255,0.1);
+      padding: 20px 40px;
+      border-radius: 8px;
+    }
+
+    .feynman-steps li {
+      color: var(--text);
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    /* CODE PLAYGROUND */
+    .playground-container {
+      background: #0a0a12;
+      border: 1px solid var(--text-dimmer);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .playground-header {
+      background: rgba(255,255,255,0.05);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .playground-title {
+      color: var(--text);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    .playground-run {
+      background: var(--success);
+      color: var(--bg-deep);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+    }
+
+    .playground-code {
+      width: 100%;
+      min-height: 150px;
+      background: transparent;
+      border: none;
+      color: var(--success);
+      font-family: 'Fira Code', monospace;
+      font-size: 1rem;
+      padding: 20px;
+      resize: vertical;
+    }
+
+    .playground-code:focus {
+      outline: none;
+    }
+
+    .playground-output {
+      background: #000;
+      border-top: 1px solid var(--text-dimmer);
+      padding: 15px 20px;
+      min-height: 80px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .playground-output .error {
+      color: var(--corrupt);
+    }
+
+    .playground-output .result {
+      color: var(--success);
+    }
+
+    /* Concept Connections */
+    .connection-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .connection-line {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .connection-arrow {
+      color: var(--text-dimmer);
+      font-size: 1.5rem;
+    }
+
+    .connection-box {
+      background: rgba(0,247,255,0.1);
+      border: 1px solid var(--aria);
+      padding: 15px 25px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .connection-box h4 {
+      color: var(--aria);
+      margin-bottom: 5px;
+    }
+
+    .connection-box p {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
     .code-compiler {
       max-width: 800px;
       margin: 0 auto;
@@ -1676,6 +2166,20 @@
       <button class="close-panel" onclick="closeAchievements()">CLOSE</button>
     </div>
     <div class="achievement-grid" id="achievement-grid"></div>
+  </div>
+
+  <!-- Deep Learn Panel -->
+  <button id="deeplearn-btn" onclick="showDeepLearn()">💡 LEARN</button>
+
+  <div id="deeplearn-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">💡 DEEP UNDERSTANDING</h2>
+      <button class="close-panel" onclick="closeDeepLearn()">CLOSE</button>
+    </div>
+    
+    <div class="deep-dive-content" id="deeplearn-content">
+      <!-- Dynamic content loaded by showDeepLearn() -->
+    </div>
   </div>
 
   <!-- Glossary Panel -->
@@ -2945,6 +3449,434 @@
 
     function closeGlossary() {
       document.getElementById('glossary-panel').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // CONCEPT DATA - Computational Thinking Focus
+    // Teaching HOW to think, not WHAT to code
+    // ═══════════════════════════════════════
+    const conceptData = {
+      variables: {
+        chapter: 2,
+        title: "NAMING THINGS",
+        subtitle: "The Foundation of Thinking",
+        
+        // Core CT concept
+        ctSkill: "ABSTRACTION - Giving names to things",
+        
+        // What problem does this solve?
+        problem: "Without names, you'd have to remember everything. 'That tall thing with leaves in the corner' vs 'plant'. Names let you think about complex things as simple labels.",
+        
+        // Real world patterns
+        pattern: "We name things constantly in life: addresses, phone numbers as 'Mom', job titles. This is the same skill - creating a handle to reference complex information.",
+        
+        // Step by step thinking
+        process: [
+          "1. Identify what you want to remember",
+          "2. Give it a meaningful name (what does it DO?)",
+          "3. Store the value - it can change, that's OK",
+          "4. Use the name whenever you need the value"
+        ],
+        
+        // How to apply to ANY problem
+        transfer: "When facing any problem: 'What are the key pieces of information I need to track?' Name them. This is the first step in systematic thinking.",
+        
+        // Thought exercise (not code)
+        thoughtExercise: {
+          prompt: "Think of your favorite game or app. What 3-5 'things' does it need to remember? (score, player name, level, etc.)",
+          reflection: "These are all variables - named storage for changing values. Every app is just a collection of named things."
+        },
+        
+        systemThinking: "Variables teach you: Everything changes. Your job is to track those changes with meaningful names. A system engineer asks: 'What state do I need to maintain?'"
+      },
+      loops: {
+        chapter: 3,
+        title: "REPEATING EFFICIENTLY",
+        subtitle: "Automation Mindset",
+        
+        ctSkill: "ALGORITHM DESIGN - Automating repetition",
+        
+        problem: "Would you write 'print hello' 1000 times? Of course not. But computers don't know to repeat unless you tell them. Loops are the foundation of automation.",
+        
+        pattern: "Every repeated task in life can be expressed as a loop: breathing (repeat inhale/exhale), washing dishes (repeat wash/rinse), walking (repeat step). Recognize the pattern = can automate.",
+        
+        process: [
+          "1. What starts the repetition? (initial state)",
+          "2. When do you STOP? (condition)",
+          "3. What changes each time? (update)",
+          "4. What happens in each iteration? (body)"
+        ],
+        
+        transfer: "When you notice yourself doing the same thing repeatedly, ask: 'Can I express this as a loop?' That's automation thinking.",
+        
+        thoughtExercise: {
+          prompt: "List 5 things you do repeatedly every day. For each, identify: start condition, stop condition, what changes each time.",
+          reflection: "Once you see loops everywhere, you can start thinking about how to automate them."
+        },
+        
+        systemThinking: "Loops teach you: Identify patterns, automate repetition. A system engineer asks: 'What processes happen repeatedly that I could automate?'"
+      },
+      conditionals: {
+        chapter: 4,
+        title: "MAKING DECISIONS",
+        subtitle: "The Branching Mind",
+        
+        ctSkill: "LOGIC - Handling different scenarios",
+        
+        problem: "Real world has contingencies. 'If it's raining, take umbrella.' Programs need the same logic to handle all possibilities, not just the happy path.",
+        
+        pattern: "Every decision in life is a conditional: if hungry → eat, if tired → sleep, if red light → stop. We think in conditionals constantly.",
+        
+        process: [
+          "1. What condition are you checking? (true/false question)",
+          "2. What happens if TRUE? (then branch)",
+          "3. What happens if FALSE? (else branch)",
+          "4. Are there more conditions? (else if chain)"
+        ],
+        
+        transfer: "When designing anything, ask: 'What could go wrong? What different scenarios might happen?' Then handle each path.",
+        
+        thoughtExercise: {
+          prompt: "Design a simple robot that makes coffee. What decisions does it need to make? (if no coffee beans, if water empty, if cup missing...)",
+          reflection: "Every decision point is a conditional. Good systems handle all cases, not just the ideal one."
+        },
+        
+        systemThinking: "Conditionals teach you: Think about all possible states, not just the expected one. A system engineer asks: 'What could go wrong? How should the system respond?'"
+      },
+      functions: {
+        chapter: 5,
+        title: "CREATING REUSABLE SOLUTIONS",
+        subtitle: "The Building Block Mindset",
+        
+        ctSkill: "DECOMPOSITION - Breaking into reusable parts",
+        
+        problem: "Writing the same code multiple times is inefficient and error-prone. Functions let you define a solution once and use it anywhere - like a recipe you can follow.",
+        
+        pattern: "Recipes, instructions, manuals - all are functions. 'How to tie shoes' works for any shoe. The INPUT varies (shoes), the PROCESS is same (tied), OUTPUT is same (tied shoes).",
+        
+        process: [
+          "1. Identify a task you do multiple times",
+          "2. Define the INPUT: What information does it need?",
+          "3. Define the OUTPUT: What should it produce?",
+          "4. Write the PROCESS: The exact steps between input and output"
+        ],
+        
+        transfer: "When you copy-paste anything, ask: 'Should this be a function?' If you use it 2+ times, it probably should be.",
+        
+        thoughtExercise: {
+          prompt: "Think of a complex task like 'planning a trip'. Break it into 3-5 smaller reusable tasks (book flight, reserve hotel, plan itinerary).",
+          reflection: "Each smaller task could be a function. Decomposition is the art of breaking big problems into reusable pieces."
+        },
+        
+        systemThinking: "Functions teach you: Don't repeat yourself (DRY). A system engineer asks: 'What's the smallest reusable unit that solves this problem?'"
+      },
+      arrays: {
+        chapter: 6,
+        title: "ORGANIZING COLLECTIONS",
+        subtitle: "List Thinking",
+        
+        ctSkill: "DATA STRUCTURE - Organizing multiple items",
+        
+        problem: "When you have many related items, how do you organize them? A list with order lets you find things fast by position - like page numbers in a book.",
+        
+        pattern: "Tables of contents, numbered lists, playlists, email inboxes - all arrays. The key is ORDER + POSITION = fast access.",
+        
+        process: [
+          "1. Do you need to store MULTIPLE related items?",
+          "2. Does ORDER matter? (first, second, third...)",
+          "3. Do you need to process them in sequence?",
+          "4. If yes to any → use an array"
+        ],
+        
+        transfer: "When you have a collection, ask: 'Do I need order?' If yes, array. If you need to find by name/key, consider object/dictionary instead.",
+        
+        thoughtExercise: {
+          prompt: "Compare: a library catalog (by index/position) vs. a dictionary (by word). Which uses array thinking? Which uses object thinking?",
+          reflection: "Arrays = ordered lists (page 1, page 2...). Objects = labeled items (word → definition). Choose based on how you need to access."
+        },
+        
+        systemThinking: "Arrays teach you: Organize data based on how you'll access it. A system engineer asks: 'How will I need to retrieve this data? By position or by key?'"
+      },
+      objects: {
+        chapter: 6,
+        title: "DESCRIBING THINGS",
+        subtitle: "The Blueprint Mindset",
+        
+        ctSkill: "ABSTRACTION - Grouping related attributes",
+        
+        problem: "Real things have many characteristics. An object groups all related attributes together under one 'thing' - like a person has name, age, address together.",
+        
+        pattern: "Every noun in language describes an object: 'person' has height, weight, age. 'car' has color, model, speed. Objects mirror how we naturally describe reality.",
+        
+        process: [
+          "1. Identify the 'thing' you're describing (noun)",
+          "2. List its attributes (adjectives/properties)",
+          "3. Group them together under one name",
+          "4. Access by name, not position"
+        ],
+        
+        transfer: "When modeling anything real, ask: 'What properties does this thing have?' Group related attributes - this is the essence of object-oriented thinking.",
+        
+        thoughtExercise: {
+          prompt: "Describe 'smartphone' as an object. What are its properties? Now describe 'smartphone app' as object. How do they differ?",
+          reflection: "Objects describe THINGS. Arrays describe LISTS. The choice affects how you think about and access your data."
+        },
+        
+        systemThinking: "Objects teach you: Model reality by grouping attributes. A system engineer asks: 'What real-world entities does my system need to represent?'"
+      },
+      recursion: {
+        chapter: 7,
+        title: "SELF-SIMILAR THINKING",
+        subtitle: "The Russian Doll Mindset",
+        
+        ctSkill: "RECURSIVE PROBLEM SOLVING - Solving big via small",
+        
+        problem: "Some problems are easier when broken into smaller versions of the same problem. Walking 10 steps = take 1 step, then walk 9 more. The problem contains itself.",
+        
+        pattern: "Russian dolls, fractals, reflection in mirrors - all recursive. Look inside any structure and you see a smaller version of the same structure.",
+        
+        process: [
+          "1. Can this problem be expressed in terms of a SMALLER version of itself?",
+          "2. What's the SIMPLEST case? (base case - stop here)",
+          "3. How do you make the problem smaller?",
+          "4. Apply same solution to smaller problem until base case"
+        ],
+        
+        transfer: "When stuck on a big problem, ask: 'Can I solve a tiny piece of this, then build up?' That's recursive thinking - solving the simple case, then extending.",
+        
+        thoughtExercise: {
+          prompt: "How would you count all files in a folder with subfolders? (count files in folder + count files in each subfolder...)",
+          reflection: "Recursive thinking: solve the simple case (empty folder = 0) then combine results. This is how you solve complex hierarchical problems."
+        },
+        
+        systemThinking: "Recursion teaches you: Some problems are self-similar. A system engineer asks: 'Can I express this as a smaller version of itself?' This is powerful for tree/graph problems."
+      },
+      algorithms: {
+        chapter: 8,
+        title: "STEP-BY-STEP THINKING",
+        subtitle: "The Recipe Mindset",
+        
+        ctSkill: "ALGORITHM DESIGN - Precise step sequences",
+        
+        problem: "The same goal can be achieved many ways - some fast, some slow. Algorithms are recipes: follow the steps, get the result. Different algorithms = different efficiency.",
+        
+        pattern: "Recipes, driving directions, math formulas - all algorithms. The key is PRECISE STEPS that, if followed, guarantee the desired result.",
+        
+        process: [
+          "1. Clearly define the INPUT",
+          "2. Clearly define the OUTPUT",
+          "3. Break into discrete, unambiguous steps",
+          "4. Verify: does this ALWAYS work?",
+          "5. Consider: is there a faster way?"
+        ],
+        
+        transfer: "Before solving any problem, ask: 'What's my algorithm?' Write down the steps before coding. The algorithm is your thinking, code is just implementation.",
+        
+        thoughtExercise: {
+          prompt: "Write an algorithm for making a sandwich. Be precise: 'get bread' is too vague. What EXACT steps? Now compare to a friend's algorithm - same goal, different approaches?",
+          reflection: "Algorithms force clarity of thought. Two people can have different but equally valid algorithms. The best algorithm depends on constraints (time, resources)."
+        },
+        
+        systemThinking: "Algorithms teach you: Think in precise steps before writing code. A system engineer asks: 'What's my algorithm? Is there a better way? What are the trade-offs?'"
+      }
+    };
+
+    // Map scenes to concepts
+    const sceneToConcept = {
+      'variable_intro': 'variables',
+      'assignment_intro': 'variables',
+      'loop_intro': 'loops',
+      'conditional_intro': 'conditionals',
+      'function_intro': 'functions',
+      'function_call': 'functions',
+      'array_intro': 'arrays',
+      'object_intro': 'objects',
+      'recursion_intro': 'recursion',
+      'algorithm_intro': 'algorithms'
+    };
+        code: `// Linear search - check each item
+function findItem(arr, target) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === target) return i;
+  }
+  return -1;
+}
+
+// Binary search - for sorted arrays
+function binarySearch(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+  
+  while (left <= right) {
+    let mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}`,
+        exercise: {
+          prompt: "Write a function that finds the biggest number in an array.",
+          hint: "Use Math.max(...arr) or loop through comparing each number",
+          solution: (code) => code.includes('arr') && (code.includes('Math.max') || code.includes('>') || code.includes('biggest'))
+        },
+        misconception: "More complex doesn't mean better! Simple algorithms are easier to understand and maintain. Only use complex algorithms when needed. Premature optimization is the root of all evil."
+      }
+    };
+
+    // Map scene IDs to concepts
+    const sceneToConcept = {
+      'variable_intro': 'variables',
+      'assignment_intro': 'variables',
+      'loop_intro': 'loops',
+      'conditional_intro': 'conditionals',
+      'function_intro': 'functions',
+      'function_call': 'functions',
+      'array_intro': 'arrays',
+      'object_intro': 'objects',
+      'recursion_intro': 'recursion',
+      'algorithm_intro': 'algorithms'
+    };
+
+    // ═══════════════════════════════════════
+    // DEEP LEARN FUNCTIONS - Computational Thinking Focus
+    // ═══════════════════════════════════════
+    function showDeepLearn() {
+      const panel = document.getElementById('deeplearn-panel');
+      const content = document.getElementById('deeplearn-content');
+      
+      // Find current concept based on scene
+      let concept = null;
+      const sceneConcept = sceneToConcept[currentSceneKey];
+      
+      // Also check by chapter
+      const chapterMatch = currentSceneKey.match(/intro[0-9]/) ? null : 
+        Object.values(conceptData).find(c => {
+          const chapterNames = ['variable', 'loop', 'conditional', 'function', 'array', 'object', 'recursion', 'algorithm'];
+          return currentSceneKey.includes(chapterNames[c.chapter - 2]);
+        });
+      
+      if (sceneConcept && conceptData[sceneConcept]) {
+        concept = conceptData[sceneConcept];
+      } else if (chapterMatch) {
+        concept = chapterMatch;
+      }
+      
+      // Build the content
+      let html = '';
+      
+      if (concept) {
+        // Context-specific CT content for current concept
+        html = `
+          <div class="dive-section concept-header">
+            <h3>🧠 ${concept.title}</h3>
+            <p class="subtitle">${concept.subtitle}</p>
+            <p class="ct-badge">${concept.ctSkill}</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>🎯 What Problem Does This Solve?</h3>
+            <p class="problem-text">${concept.problem}</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>🔄 The Pattern in Real Life</h3>
+            <p class="pattern-text">${concept.pattern}</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>📝 How to Think About It</h3>
+            <ol class="process-list">
+              ${concept.process.map(step => `<li>${step}</li>`).join('')}
+            </ol>
+          </div>
+          
+          <div class="dive-section">
+            <h3>🌉 Transfer to Other Problems</h3>
+            <p class="transfer-text">${concept.transfer}</p>
+          </div>
+          
+          <div class="dive-section thought-section">
+            <h3>💭 Think About It</h3>
+            <p class="thought-prompt"><strong>Reflection:</strong> ${concept.thoughtExercise.prompt}</p>
+            <div class="thought-box">
+              <p class="thought-reflection">${concept.thoughtExercise.reflection}</p>
+            </div>
+          </div>
+          
+          <div class="dive-section system-thinking">
+            <h3>⚡ System Engineer Mindset</h3>
+            <p>${concept.systemThinking}</p>
+          </div>
+        `;
+      } else {
+        // General overview for intro chapters - focus on CT
+        html = `
+          <div class="dive-section concept-header">
+            <h3>🧠 Computational Thinking</h3>
+            <p class="subtitle">Learn to Think Like a System Engineer</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>🔑 The 4 Pillars of CT</h3>
+            <div class="pillar">
+              <h4>🧩 Decomposition</h4>
+              <p>Break big problems into small pieces</p>
+            </div>
+            <div class="pillar">
+              <h4>🔍 Pattern Recognition</h4>
+              <p>Find similarities between problems</p>
+            </div>
+            <div class="pillar">
+              <h4>🎭 Abstraction</h4>
+              <p>Focus on what matters, ignore details</p>
+            </div>
+            <div class="pillar">
+              <h4>📋 Algorithm</h4>
+              <p>Create step-by-step solutions</p>
+            </div>
+          </div>
+          
+          <div class="dive-section">
+            <h3>Why Not Just Memorize?</h3>
+            <p>Memorizing syntax is like memorizing phone numbers - useless when they change. <strong>Thinking skills transfer forever.</strong></p>
+            <p>This game teaches you to think, not just code. When you finish, you'll see problems differently.</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>📖 Your Learning Journey</h3>
+            <p><strong>Chapter 2:</strong> Naming Things → Abstraction</p>
+            <p><strong>Chapter 3:</strong> Repeating → Algorithm Design</p>
+            <p><strong>Chapter 4:</strong> Decisions → Logic</p>
+            <p><strong>Chapter 5:</strong> Reusable Parts → Decomposition</p>
+            <p><strong>Chapter 6:</strong> Collections → Data Structure Thinking</p>
+            <p><strong>Chapter 7:</strong> Self-Similarity → Recursive Thinking</p>
+            <p><strong>Chapter 8:</strong> Step-by-Step → Algorithm Thinking</p>
+          </div>
+        `;
+      }
+      
+      content.innerHTML = html;
+      panel.classList.add('visible');
+    }
+    
+    function closeDeepLearn() {
+      document.getElementById('deeplearn-panel').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // UTILITY FUNCTIONS
+    // ═══════════════════════════════════════
+      } catch (e) {
+        output.innerHTML = '<div class="error">Error: ' + e.message + '</div>';
+      } finally {
+        console.log = originalLog;
+      }
+    }
+
+    function clearPlayground() {
+      document.getElementById('playground-code').value = '';
+      document.getElementById('playground-output').innerHTML = '// Output will appear here...';
     }
 
     // ═══════════════════════════════════════
