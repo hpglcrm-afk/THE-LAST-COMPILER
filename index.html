@@ -239,6 +239,7 @@
       letter-spacing: 0.3em;
       position: relative;
       overflow: hidden;
+      z-index: 10000;
     }
 
     .start-btn::before {
@@ -806,7 +807,7 @@
       font-size: 0.75rem;
       cursor: pointer;
       border-radius: 4px;
-      z-index: 100;
+      z-index: 10000;
     }
 
     #glossary-btn:hover {
@@ -826,7 +827,7 @@
       font-size: 0.75rem;
       cursor: pointer;
       border-radius: 4px;
-      z-index: 100;
+      z-index: 10000;
     }
 
     #achievements-btn:hover {
@@ -1567,11 +1568,31 @@
       font-weight: 600;
       cursor: pointer;
       border-radius: 4px;
-      z-index: 100;
+      z-index: 10000;
     }
 
     #deeplearn-btn:hover {
       box-shadow: 0 0 20px var(--aria);
+    }
+
+    #eli5-btn {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      z-index: 10000;
+    }
+
+    #eli5-btn:hover {
+      box-shadow: 0 0 20px #FF6B6B;
     }
 
     #deeplearn-panel {
@@ -1588,6 +1609,24 @@
     }
 
     #deeplearn-panel.visible {
+      display: block;
+      animation: panelFadeIn 0.3s ease;
+    }
+
+    #eli5-panel {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 5, 20, 0.98);
+      z-index: 9999;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    #eli5-panel.visible {
       display: block;
       animation: panelFadeIn 0.3s ease;
     }
@@ -1881,6 +1920,171 @@
       display: none;
     }
 
+    /* INTERACTIVE CT EXERCISE STYLES */
+    .mission-text {
+      font-size: 1.15rem;
+      color: var(--text);
+      background: rgba(0,247,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--aria);
+      line-height: 1.8;
+    }
+
+    .step-exercise {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .step {
+      display: flex;
+      gap: 15px;
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid var(--text-dimmer);
+    }
+
+    .step-num {
+      background: var(--aria);
+      color: var(--bg-deep);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .step strong {
+      color: var(--success);
+    }
+
+    .hint-text {
+      color: var(--text-dimmer);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+
+    .ct-input {
+      width: 100%;
+      min-height: 120px;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid var(--text-dimmer);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      padding: 15px;
+      resize: vertical;
+    }
+
+    .ct-input:focus {
+      outline: none;
+      border-color: var(--aria);
+    }
+
+    .submit-btn {
+      background: var(--success);
+      color: var(--bg-deep);
+      border: none;
+      padding: 12px 30px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover {
+      background: #00ff7f;
+      transform: scale(1.02);
+    }
+
+    .ct-feedback {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .ct-feedback .success {
+      color: var(--success);
+      background: rgba(0,255,127,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .ct-feedback .error {
+      color: var(--corruption);
+      background: rgba(255,69,0,0.1);
+      padding: 15px;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .skill-card {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--text-dimmer);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .skill-card h4 {
+      color: var(--aria);
+      margin-bottom: 8px;
+    }
+
+    .skill-card p {
+      color: var(--text-dimmer);
+      margin: 0;
+    }
+
+    /* ELI5 Styles */
+    .eli5-simple {
+      font-size: 1.15rem;
+      color: var(--text);
+      line-height: 1.8;
+      background: rgba(255, 107, 107, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid #FF6B6B;
+    }
+
+    .eli5-analogy {
+      background: rgba(255, 142, 83, 0.15);
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .eli5-code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px 18px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .eli5-code code {
+      color: var(--success);
+    }
+
     /* Deep Learn Panel scrollable */
     #deeplearn-content {
       color: var(--bg-deep);
@@ -1932,74 +2136,6 @@
       color: var(--text);
       margin-bottom: 10px;
       font-size: 1.05rem;
-    }
-
-    /* CODE PLAYGROUND */
-    .playground-container {
-      background: #0a0a12;
-      border: 1px solid var(--text-dimmer);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-top: 20px;
-    }
-
-    .playground-header {
-      background: rgba(255,255,255,0.05);
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .playground-title {
-      color: var(--text);
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-    }
-
-    .playground-run {
-      background: var(--success);
-      color: var(--bg-deep);
-      border: none;
-      padding: 8px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
-    }
-
-    .playground-code {
-      width: 100%;
-      min-height: 150px;
-      background: transparent;
-      border: none;
-      color: var(--success);
-      font-family: 'Fira Code', monospace;
-      font-size: 1rem;
-      padding: 20px;
-      resize: vertical;
-    }
-
-    .playground-code:focus {
-      outline: none;
-    }
-
-    .playground-output {
-      background: #000;
-      border-top: 1px solid var(--text-dimmer);
-      padding: 15px 20px;
-      min-height: 80px;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-
-    .playground-output .error {
-      color: var(--corrupt);
-    }
-
-    .playground-output .result {
-      color: var(--success);
     }
 
     /* Concept Connections */
@@ -2168,17 +2304,31 @@
     <div class="achievement-grid" id="achievement-grid"></div>
   </div>
 
-  <!-- Deep Learn Panel -->
-  <button id="deeplearn-btn" onclick="showDeepLearn()">💡 LEARN</button>
+  <!-- LEARN Button -->
+  <button id="deeplearn-btn" onclick="showDeepLearn()">🧠 THINK</button>
 
+  <!-- ELI5 Button -->
+  <button id="eli5-btn" onclick="showELI5()">👶 ELI5</button>
+
+  <!-- Deep Learn Panel - CT Exercises -->
   <div id="deeplearn-panel">
     <div class="panel-header">
-      <h2 class="panel-title">💡 DEEP UNDERSTANDING</h2>
+      <h2 class="panel-title">🧠 COMPUTATIONAL THINKING</h2>
       <button class="close-panel" onclick="closeDeepLearn()">CLOSE</button>
     </div>
     
     <div class="deep-dive-content" id="deeplearn-content">
-      <!-- Dynamic content loaded by showDeepLearn() -->
+    </div>
+  </div>
+
+  <!-- ELI5 Panel - Simple Explanations -->
+  <div id="eli5-panel">
+    <div class="panel-header">
+      <h2 class="panel-title">👶 SIMPLE EXPLANATIONS</h2>
+      <button class="close-panel" onclick="closeELI5()">CLOSE</button>
+    </div>
+    
+    <div class="deep-dive-content" id="eli5-content">
     </div>
   </div>
 
@@ -2305,6 +2455,8 @@
     // ═══════════════════════════════════════
     // GAME STATE
     // ═══════════════════════════════════════
+    console.log('Script starting...');
+    try {
     const gameState = {
       currentScene: 0,
       totalScenes: 20,
@@ -3694,164 +3846,381 @@
       'recursion_intro': 'recursion',
       'algorithm_intro': 'algorithms'
     };
-        code: `// Linear search - check each item
-function findItem(arr, target) {
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === target) return i;
-  }
-  return -1;
-}
-
-// Binary search - for sorted arrays
-function binarySearch(arr, target) {
-  let left = 0;
-  let right = arr.length - 1;
-  
-  while (left <= right) {
-    let mid = Math.floor((left + right) / 2);
-    if (arr[mid] === target) return mid;
-    if (arr[mid] < target) left = mid + 1;
-    else right = mid - 1;
-  }
-  return -1;
-}`,
-        exercise: {
-          prompt: "Write a function that finds the biggest number in an array.",
-          hint: "Use Math.max(...arr) or loop through comparing each number",
-          solution: (code) => code.includes('arr') && (code.includes('Math.max') || code.includes('>') || code.includes('biggest'))
-        },
-        misconception: "More complex doesn't mean better! Simple algorithms are easier to understand and maintain. Only use complex algorithms when needed. Premature optimization is the root of all evil."
-      }
-    };
-
-    // Map scene IDs to concepts
-    const sceneToConcept = {
-      'variable_intro': 'variables',
-      'assignment_intro': 'variables',
-      'loop_intro': 'loops',
-      'conditional_intro': 'conditionals',
-      'function_intro': 'functions',
-      'function_call': 'functions',
-      'array_intro': 'arrays',
-      'object_intro': 'objects',
-      'recursion_intro': 'recursion',
-      'algorithm_intro': 'algorithms'
-    };
 
     // ═══════════════════════════════════════
     // DEEP LEARN FUNCTIONS - Computational Thinking Focus
     // ═══════════════════════════════════════
     function showDeepLearn() {
+      console.log('Opening LEARN panel, currentSceneKey:', currentSceneKey);
       const panel = document.getElementById('deeplearn-panel');
       const content = document.getElementById('deeplearn-content');
       
       // Find current concept based on scene
       let concept = null;
-      const sceneConcept = sceneToConcept[currentSceneKey];
+      let conceptKey = null;
+      
+      // Get current scene key - handle case when not in game yet
+      const sceneKey = currentSceneKey || 'intro1';
+      const sceneConcept = sceneToConcept[sceneKey];
       
       // Also check by chapter
-      const chapterMatch = currentSceneKey.match(/intro[0-9]/) ? null : 
+      const chapterMatch = sceneKey.match(/intro[0-9]/) ? null : 
         Object.values(conceptData).find(c => {
           const chapterNames = ['variable', 'loop', 'conditional', 'function', 'array', 'object', 'recursion', 'algorithm'];
-          return currentSceneKey.includes(chapterNames[c.chapter - 2]);
+          return sceneKey.includes(chapterNames[c.chapter - 2]);
         });
       
       if (sceneConcept && conceptData[sceneConcept]) {
         concept = conceptData[sceneConcept];
+        conceptKey = sceneConcept;
       } else if (chapterMatch) {
+        // Find the key for this concept
+        for (const key in conceptData) {
+          if (conceptData[key] === chapterMatch) {
+            conceptKey = key;
+            break;
+          }
+        }
         concept = chapterMatch;
       }
       
-      // Build the content
+      // Build the content - INTERACTIVE CT EXERCISES
       let html = '';
       
-      if (concept) {
-        // Context-specific CT content for current concept
+      // Always show something - either concept exercise or default intro
+      if (concept && conceptKey) {
+        // Interactive CT exercise for current concept
+        const exercise = getCTExercise(conceptKey);
+        
         html = `
           <div class="dive-section concept-header">
-            <h3>🧠 ${concept.title}</h3>
-            <p class="subtitle">${concept.subtitle}</p>
-            <p class="ct-badge">${concept.ctSkill}</p>
+            <h3>🎯 ${concept.title}</h3>
+            <p class="subtitle">${exercise.scenario}</p>
           </div>
           
           <div class="dive-section">
-            <h3>🎯 What Problem Does This Solve?</h3>
-            <p class="problem-text">${concept.problem}</p>
+            <h3>Your Mission</h3>
+            <p class="mission-text">${exercise.mission}</p>
           </div>
           
           <div class="dive-section">
-            <h3>🔄 The Pattern in Real Life</h3>
-            <p class="pattern-text">${concept.pattern}</p>
-          </div>
-          
-          <div class="dive-section">
-            <h3>📝 How to Think About It</h3>
-            <ol class="process-list">
-              ${concept.process.map(step => `<li>${step}</li>`).join('')}
-            </ol>
-          </div>
-          
-          <div class="dive-section">
-            <h3>🌉 Transfer to Other Problems</h3>
-            <p class="transfer-text">${concept.transfer}</p>
-          </div>
-          
-          <div class="dive-section thought-section">
-            <h3>💭 Think About It</h3>
-            <p class="thought-prompt"><strong>Reflection:</strong> ${concept.thoughtExercise.prompt}</p>
-            <div class="thought-box">
-              <p class="thought-reflection">${concept.thoughtExercise.reflection}</p>
+            <h3>Think Step by Step</h3>
+            <div class="step-exercise">
+              <div class="step">
+                <span class="step-num">1</span>
+                <p><strong>What do you need to TRACK?</strong><br>
+                <span class="hint-text">${exercise.hints.track}</span></p>
+              </div>
+              <div class="step">
+                <span class="step-num">2</span>
+                <p><strong>What REPEATS?</strong><br>
+                <span class="hint-text">${exercise.hints.repeat}</span></p>
+              </div>
+              <div class="step">
+                <span class="step-num">3</span>
+                <p><strong>What DECISIONS need to be made?</strong><br>
+                <span class="hint-text">${exercise.hints.decide}</span></p>
+              </div>
+              <div class="step">
+                <span class="step-num">4</span>
+                <p><strong>What's your SOLUTION?</strong><br>
+                <span class="hint-text">${exercise.hints.solution}</span></p>
+              </div>
             </div>
           </div>
           
+          <div class="dive-section">
+            <h3>Your Answer</h3>
+            <textarea id="ct-answer" class="ct-input" placeholder="${exercise.placeholder}"></textarea>
+            <button class="submit-btn" onclick="submitCTAnswer('${conceptKey}')">Submit Answer</button>
+            <div id="ct-feedback" class="ct-feedback"></div>
+          </div>
+          
+          <div class="dive-section">
+            <h3>💡 The Pattern</h3>
+            <p>${concept.pattern}</p>
+          </div>
+          
           <div class="dive-section system-thinking">
-            <h3>⚡ System Engineer Mindset</h3>
+            <h3>🎓 System Engineer Insight</h3>
             <p>${concept.systemThinking}</p>
           </div>
         `;
       } else {
-        // General overview for intro chapters - focus on CT
+        // Default - CT introduction with interactive exercise
         html = `
           <div class="dive-section concept-header">
             <h3>🧠 Computational Thinking</h3>
-            <p class="subtitle">Learn to Think Like a System Engineer</p>
+            <p class="subtitle">Train Your Problem-Solving Brain</p>
           </div>
           
           <div class="dive-section">
-            <h3>🔑 The 4 Pillars of CT</h3>
-            <div class="pillar">
+            <h3>What is CT?</h3>
+            <p>Computational Thinking is how engineers break down problems and create solutions. It's not about coding - it's about <strong>thinking</strong>.</p>
+          </div>
+          
+          <div class="dive-section">
+            <h3>Your First Exercise</h3>
+            <p class="mission-text">Think of a problem in your daily life. How would you break it into steps?</p>
+            <p>For example: Making coffee, doing laundry, or planning a trip.</p>
+            <textarea id="ct-answer" class="ct-input" placeholder="Describe your problem and how you'd break it into steps..."></textarea>
+            <button class="submit-btn" onclick="submitCTAnswer('welcome')">Think About It</button>
+            <div id="ct-feedback" class="ct-feedback"></div>
+          </div>
+          
+          <div class="dive-section">
+            <h3>The 4 Skills</h3>
+            <div class="skill-card">
               <h4>🧩 Decomposition</h4>
               <p>Break big problems into small pieces</p>
             </div>
-            <div class="pillar">
+            <div class="skill-card">
               <h4>🔍 Pattern Recognition</h4>
-              <p>Find similarities between problems</p>
+              <p>Find what's similar in different problems</p>
             </div>
-            <div class="pillar">
+            <div class="skill-card">
               <h4>🎭 Abstraction</h4>
-              <p>Focus on what matters, ignore details</p>
+              <p>Focus on important stuff, ignore details</p>
             </div>
-            <div class="pillar">
+            <div class="skill-card">
               <h4>📋 Algorithm</h4>
-              <p>Create step-by-step solutions</p>
+              <p>Create step-by-step solution</p>
             </div>
           </div>
           
           <div class="dive-section">
-            <h3>Why Not Just Memorize?</h3>
-            <p>Memorizing syntax is like memorizing phone numbers - useless when they change. <strong>Thinking skills transfer forever.</strong></p>
-            <p>This game teaches you to think, not just code. When you finish, you'll see problems differently.</p>
+            <h3>Why This Matters</h3>
+            <p>When you finish this game, you'll see problems differently. Instead of "I don't know how to code this" you'll think "I need to break this into steps..."</p>
+            <p>That's what a system engineer does.</p>
           </div>
-          
+        `;
+      }
+      content.innerHTML = html;
+      panel.classList.add('visible');
+    }
+    
+    // CT Exercises Database
+    const ctExercises = {
+      variables: {
+        scenario: "You're building a game",
+        mission: "A player collects coins. Describe what data you need to track.",
+        placeholder: "List the variables you need (e.g., playerScore, coinCount...)",
+        hints: {
+          track: "What changes during the game? Score, health, position, items...",
+          repeat: "Does anything repeat? No, this is about state.",
+          decide: "Any yes/no questions? Is player alive? Has key?",
+          solution: "List each piece of data with what it stores"
+        },
+        modelAnswer: "playerScore, playerHealth, playerPosition, coinsCollected, currentLevel"
+      },
+      loops: {
+        scenario: "You're automating email responses",
+        mission: "You need to send the same welcome email to 100 new users. How do you think about this?",
+        placeholder: "Describe how you'd approach sending 100 emails...",
+        hints: {
+          track: "Current user number, email content, send status...",
+          repeat: "What's the same for each email? What's different?",
+          decide: "When to stop? What if email fails?",
+          solution: "Start at 1, while <= 100, send, increment"
+        },
+        modelAnswer: "Loop through list: for each user, send welcome email"
+      },
+      conditionals: {
+        scenario: "You're designing a login system",
+        mission: "User enters password. What decisions does the system make?",
+        placeholder: "List the if/else decisions the system needs...",
+        hints: {
+          track: "username, password, attempts, lockout status...",
+          repeat: "Does login check repeat? Yes, for each attempt.",
+          decide: "Password correct? Account locked? Too many attempts?",
+          solution: "If password correct → allow. If wrong → try again. If too many attempts → lock."
+        },
+        modelAnswer: "If password matches → login success. Else → error. If attempts > 5 → lock account."
+      },
+      functions: {
+        scenario: "You're building a calculator app",
+        mission: "User needs to add numbers frequently. How do you make this reusable?",
+        placeholder: "How would you create a reusable 'add' function? What goes in, what comes out?",
+        hints: {
+          track: "Two numbers as input, sum as output...",
+          repeat: "Does the adding process repeat? Yes!",
+          decide: "What if inputs aren't numbers?",
+          solution: "Function add(a, b) { return a + b }"
+        },
+        modelAnswer: "Create function add(a, b) that returns a + b. Call it whenever you need to add."
+      },
+      arrays: {
+        scenario: "You're building a to-do list app",
+        mission: "User has 50 tasks. How do you store and access them?",
+        placeholder: "What data structure would you use and why?",
+        hints: {
+          track: "List of tasks in order...",
+          repeat: "Need to go through all tasks? Yes!",
+          decide: "Which task to show first? Last?",
+          solution: "Array of tasks. Access by index: tasks[0], tasks[1]..."
+        },
+        modelAnswer: "Use an array: tasks = ['task1', 'task2', ...]. Access by position."
+      },
+      objects: {
+        scenario: "You're describing a player character in a game",
+        mission: "What data describes a player? Group it meaningfully.",
+        placeholder: "Create an object that holds all player information...",
+        hints: {
+          track: "Name, health, level, inventory, skills...",
+          repeat: "Not about repetition - about grouping.",
+          decide: "Is player alive? Is inventory full?",
+          solution: "Group related data: player = { name, health, level, inventory }"
+        },
+        modelAnswer: "player = { name: 'Hero', health: 100, level: 1, inventory: [] }"
+      },
+      recursion: {
+        scenario: "You're counting files in folders with subfolders",
+        mission: "How do you count ALL files including those in subfolders?",
+        placeholder: "Think: How would a folder contain itself?",
+        hints: {
+          track: "Total count, current folder, subfolders...",
+          repeat: "Does counting subfolders use same method? Yes!",
+          decide: "When to stop? When folder is empty?",
+          solution: "Count files in folder + count files in each subfolder"
+        },
+        modelAnswer: "Function countFiles(folder): if empty return 0, else return 1 + sum(countFiles(subfolder) for each subfolder)"
+      },
+      algorithms: {
+        scenario: "You're giving directions to a stranger",
+        mission: "How do you explain how to get from A to B?",
+        placeholder: "Write step-by-step directions...",
+        hints: {
+          track: "Start location, end location, route...",
+          repeat: "Any steps that repeat? Turn, walk, turn...",
+          decide: "Left or right? Go straight or turn?",
+          solution: "Step 1: Go to corner. Step 2: Turn right. Step 3: Walk 2 blocks..."
+        },
+        modelAnswer: "Algorithm = precise steps that always work. Different routes = different algorithms."
+      }
+    };
+    
+    function getCTExercise(conceptKey) {
+      return ctExercises[conceptKey] || ctExercises.algorithms;
+    }
+    
+    function submitCTAnswer(conceptKey) {
+      const answer = document.getElementById('ct-answer').value.trim();
+      const feedback = document.getElementById('ct-feedback');
+      
+      if (answer.length < 10) {
+        feedback.innerHTML = '<span class="error">📝 Think deeper. Give more detail about YOUR thinking process.</span>';
+        return;
+      }
+      
+      // Handle welcome/intro case
+      if (conceptKey === 'welcome') {
+        feedback.innerHTML = `<span class="success">✅ Excellent! That's decomposition - breaking a big problem into smaller steps.<br><br>
+        <strong>You just did computational thinking!</strong><br>
+        This is exactly how system engineers approach problems.</span>`;
+        gameState.learnedConcepts.add('welcome');
+        saveGame();
+        return;
+      }
+      
+      const exercise = ctExercises[conceptKey];
+      if (!exercise) {
+        feedback.innerHTML = '<span class="error">Error: Exercise not found</span>';
+        return;
+      }
+      
+      // Simple check - user just needs to show they thought about it
+      feedback.innerHTML = `<span class="success">✅ Great thinking! You've just practiced ${conceptKey}.<br><br>
+      <strong>Key insight:</strong> ${exercise.modelAnswer}</span>`;
+      
+      // Mark as completed
+      gameState.learnedConcepts.add(conceptKey);
+      saveGame();
+    }
+    
+    function closeDeepLearn() {
+      document.getElementById('deeplearn-panel').classList.remove('visible');
+    }
+
+    // ═══════════════════════════════════════
+    // ELI5 FUNCTIONS - Simple Explanations
+    // ═══════════════════════════════════════
+    function showELI5() {
+      console.log('Opening ELI5 panel');
+      const panel = document.getElementById('eli5-panel');
+      const content = document.getElementById('eli5-content');
+      
+      // Simple ELI5 explanations for each concept
+      const eli5Data = {
+        variables: {
+          title: "VARIABLES",
+          simple: "A variable is like a box with a label. You write 'score' on the outside, and you can put a number inside. Later, you can take the number out or put a new one in.",
+          analogy: "It's like a parking spot - it has a number (name), and different cars (values) can park there over time.",
+          code: "let score = 100;"
+        },
+        loops: {
+          title: "LOOPS",
+          simple: "A loop is doing the same thing over and over until you're told to stop. Like clapping along to a song - you keep clapping until the song ends.",
+          analogy: "Like running around a track - you keep going around until you've done enough laps.",
+          code: "for (let i = 0; i < 5; i++) { clap(); }"
+        },
+        conditionals: {
+          title: "CONDITIONALS",
+          simple: "A conditional is like asking a question and doing different things based on the answer. If it's raining → take umbrella. If not → wear sunglasses.",
+          analogy: "Traffic lights - green means go, red means stop.",
+          code: "if (raining) { takeUmbrella(); }"
+        },
+        functions: {
+          title: "FUNCTIONS",
+          simple: "A function is like a recipe. You write down the steps once, and then you can follow that recipe anytime you need to make that thing.",
+          analogy: "A magic spell - you learn the words once, then you can cast it whenever you want.",
+          code: "function double(x) { return x * 2; }"
+        },
+        arrays: {
+          title: "ARRAYS",
+          simple: "An array is like a numbered list. The first item is #0, second is #1, and so on. You can find anything instantly by its number.",
+          analogy: "A train with numbered cars. Car 0, Car 1, Car 2...",
+          code: "let fruits = ['apple', 'banana'];"
+        },
+        objects: {
+          title: "OBJECTS",
+          simple: "An object is like a person file. It has all the info about one thing - name, age, address - grouped together.",
+          analogy: "A student ID card has your name, photo, ID number - all about YOU in one card.",
+          code: "let person = { name: 'Alex', age: 20 };"
+        },
+        recursion: {
+          title: "RECURSION",
+          simple: "Recursion is like Russian dolls. Inside each doll is a smaller doll. Inside that is an even smaller one, until you reach the tiny one.",
+          analogy: "Taking a photo of yourself holding that photo, holding that photo...",
+          code: "function countDown(n) { if (n==0) return; countDown(n-1); }"
+        },
+        algorithms: {
+          title: "ALGORITHMS",
+          simple: "An algorithm is just a recipe - a step-by-step list of instructions that, if you follow exactly, will give you the result you want.",
+          analogy: "Driving directions - turn left, go 2 miles, turn right...",
+          code: "// Algorithm: how to make tea"
+        }
+      };
+      
+      let html = `
+        <div class="dive-section concept-header">
+          <h3>👶 Programming Concepts Explained Simply</h3>
+          <p class="subtitle">For anyone to understand</p>
+        </div>
+      `;
+      
+      // Show all concepts with ELI5
+      for (const key in eli5Data) {
+        const item = eli5Data[key];
+        html += `
           <div class="dive-section">
-            <h3>📖 Your Learning Journey</h3>
-            <p><strong>Chapter 2:</strong> Naming Things → Abstraction</p>
-            <p><strong>Chapter 3:</strong> Repeating → Algorithm Design</p>
-            <p><strong>Chapter 4:</strong> Decisions → Logic</p>
-            <p><strong>Chapter 5:</strong> Reusable Parts → Decomposition</p>
-            <p><strong>Chapter 6:</strong> Collections → Data Structure Thinking</p>
-            <p><strong>Chapter 7:</strong> Self-Similarity → Recursive Thinking</p>
-            <p><strong>Chapter 8:</strong> Step-by-Step → Algorithm Thinking</p>
+            <h3>${item.title}</h3>
+            <p class="eli5-simple">${item.simple}</p>
+            <div class="eli5-analogy">
+              <strong>🧠 Think of it like this:</strong> ${item.analogy}
+            </div>
+            <div class="eli5-code">
+              <strong>⌨️ In code:</strong> <code>${item.code}</code>
+            </div>
           </div>
         `;
       }
@@ -3860,23 +4229,8 @@ function binarySearch(arr, target) {
       panel.classList.add('visible');
     }
     
-    function closeDeepLearn() {
-      document.getElementById('deeplearn-panel').classList.remove('visible');
-    }
-
-    // ═══════════════════════════════════════
-    // UTILITY FUNCTIONS
-    // ═══════════════════════════════════════
-      } catch (e) {
-        output.innerHTML = '<div class="error">Error: ' + e.message + '</div>';
-      } finally {
-        console.log = originalLog;
-      }
-    }
-
-    function clearPlayground() {
-      document.getElementById('playground-code').value = '';
-      document.getElementById('playground-output').innerHTML = '// Output will appear here...';
+    function closeELI5() {
+      document.getElementById('eli5-panel').classList.remove('visible');
     }
 
     // ═══════════════════════════════════════
@@ -4968,6 +5322,8 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
           closeGlossary();
           closeMemory();
           closeYourCode();
+          closeDeepLearn();
+          closeELI5();
         }
         // G for glossary
         if (e.key === 'g' || e.key === 'G') {
@@ -4985,12 +5341,32 @@ players[<span class="number">1</span>].name <span class="comment">// "ARIA"</spa
             showAchievements();
           }
         }
+        // L for LEARN (CT exercises)
+        if (e.key === 'l' || e.key === 'L') {
+          if (document.getElementById('deeplearn-panel').classList.contains('visible')) {
+            closeDeepLearn();
+          } else {
+            showDeepLearn();
+          }
+        }
+        // E for ELI5
+        if (e.key === 'e' || e.key === 'E') {
+          if (document.getElementById('eli5-panel').classList.contains('visible')) {
+            closeELI5();
+          } else {
+            showELI5();
+          }
+        }
         // S to toggle story/code
         if (e.key === 's' || e.key === 'S') {
           toggleAbstraction();
         }
       });
     };
+    } catch(e) {
+      console.error('JavaScript Error:', e);
+      alert('Error loading game: ' + e.message);
+    }
   </script>
 </body>
 </html>
